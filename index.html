@@ -50,7 +50,8 @@
   <div class="flex h-screen overflow-hidden">
 
     <!-- SIDEBAR -->
-    <aside class="w-64 bg-slate-900 border-r border-slate-800 flex flex-col transition-all duration-300 z-20">
+    <!-- Perubahan: Menambahkan ID 'sidebar' dan class responsive (absolute/md:relative, -translate-x-full/md:translate-x-0) -->
+    <aside id="sidebar" class="absolute md:relative h-full w-64 bg-slate-900 border-r border-slate-800 flex flex-col transition-transform duration-300 z-50 -translate-x-full md:translate-x-0">
       <!-- Sidebar Header -->
       <div class="h-16 flex items-center px-6 border-b border-slate-800 gap-3">
         <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-600 to-cyan-400 flex items-center justify-center shadow-lg shadow-brand-600/30">
@@ -60,6 +61,10 @@
           <h1 class="font-bold text-sm tracking-wide text-slate-100">C'DAN SHOP</h1>
           <p class="text-[10px] text-slate-400 font-medium">Management System</p>
         </div>
+        <!-- Tombol Tutup Khusus Mobile -->
+        <button onclick="document.getElementById('sidebar').classList.add('-translate-x-full')" class="md:hidden ml-auto text-slate-400 hover:text-slate-100">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
       </div>
 
       <!-- Navigation Menu -->
@@ -113,50 +118,55 @@
     <div class="flex-1 flex flex-col overflow-hidden">
       
       <!-- TOP HEADER -->
-      <header class="h-16 bg-slate-900 border-b border-slate-800 flex items-center justify-between px-6 z-10">
-        <div class="flex items-center gap-4">
-          <div class="flex items-center gap-2 bg-slate-800/80 px-3 py-1.5 rounded-xl border border-slate-700 text-xs text-slate-300">
+      <header class="h-16 bg-slate-900 border-b border-slate-800 flex items-center justify-between px-4 md:px-6 z-10 w-full">
+        <div class="flex items-center gap-3 md:gap-4">
+          <!-- Tombol Menu Khusus Mobile -->
+          <button onclick="document.getElementById('sidebar').classList.remove('-translate-x-full')" class="md:hidden text-slate-300 hover:text-white p-1">
+            <i class="fa-solid fa-bars text-xl"></i>
+          </button>
+
+          <div class="flex items-center gap-2 bg-slate-800/80 px-2 md:px-3 py-1.5 rounded-xl border border-slate-700 text-xs text-slate-300">
             <i class="fa-regular fa-clock text-brand-400"></i>
             <span id="currentClock" class="font-mono font-bold">00:00:00</span>
           </div>
         </div>
 
-        <div class="flex items-center gap-3">
-          <button onclick="app.showStoreProfileModal()" class="flex items-center gap-2 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 rounded-xl border border-slate-700 text-xs transition">
-            <i class="fa-solid fa-gear text-brand-400"></i> Pengaturan Toko
+        <div class="flex items-center gap-2 md:gap-3">
+          <button onclick="app.showStoreProfileModal()" class="flex items-center gap-2 px-2 md:px-3 py-1.5 bg-slate-800 hover:bg-slate-700 rounded-xl border border-slate-700 text-[11px] md:text-xs transition">
+            <i class="fa-solid fa-gear text-brand-400"></i> <span class="hidden md:inline">Pengaturan</span>
           </button>
-          <button onclick="app.exportAllDataJSON()" class="px-3 py-1.5 bg-brand-600 hover:bg-brand-500 text-white rounded-xl text-xs font-semibold shadow-md shadow-brand-600/20 transition flex items-center gap-2">
-            <i class="fa-solid fa-cloud-arrow-down"></i> Backup JSON
+          <button onclick="app.exportAllDataJSON()" class="px-2 md:px-3 py-1.5 bg-brand-600 hover:bg-brand-500 text-white rounded-xl text-[11px] md:text-xs font-semibold shadow-md shadow-brand-600/20 transition flex items-center gap-2">
+            <i class="fa-solid fa-cloud-arrow-down"></i> <span class="hidden md:inline">Backup</span>
           </button>
         </div>
       </header>
 
       <!-- CONTENT AREA -->
-      <main class="flex-1 overflow-y-auto p-6 bg-slate-950 relative">
+      <main class="flex-1 overflow-y-auto p-4 md:p-6 bg-slate-950 relative">
 
         <!-- TAB 1: DASHBOARD -->
         <div id="tab-dashboard" class="tab-content space-y-6">
-          <div class="flex justify-between items-center">
+          <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
             <div>
               <h2 class="text-xl font-bold text-slate-100">Dashboard & Statistik Toko</h2>
               <p class="text-xs text-slate-400">Ringkasan transaksi, pergerakan modal, dan inventaris barang secara real-time.</p>
             </div>
-            <button onclick="app.refreshDashboardData()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs rounded-xl flex items-center gap-2">
+            <button onclick="app.refreshDashboardData()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs rounded-xl flex items-center gap-2 w-full md:w-auto justify-center">
               <i class="fa-solid fa-rotate"></i> Muat Ulang
             </button>
           </div>
 
           <!-- Metric Cards -->
-          <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
-            <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl">
+          <div class="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4">
+            <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl col-span-2 md:col-span-1">
               <p class="text-xs text-slate-400 font-medium">Total Pembelian (Modal)</p>
               <h3 id="dashTotalPurchases" class="text-lg font-bold text-brand-400 font-mono mt-1">Rp 0</h3>
             </div>
-            <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl">
+            <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl col-span-2 md:col-span-1">
               <p class="text-xs text-slate-400 font-medium">Total Penjualan (Omset)</p>
               <h3 id="dashTotalSales" class="text-lg font-bold text-emerald-400 font-mono mt-1">Rp 0</h3>
             </div>
-            <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl">
+            <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl col-span-2 md:col-span-1">
               <p class="text-xs text-slate-400 font-medium">Estimasi Laba Kotor</p>
               <h3 id="dashTotalProfit" class="text-lg font-bold text-purple-400 font-mono mt-1">Rp 0</h3>
             </div>
@@ -249,10 +259,10 @@
                   <table class="w-full text-left text-xs">
                     <thead class="bg-slate-800/50 text-slate-400 sticky top-0">
                       <tr>
-                        <th class="px-3 py-2">Nama Barang</th>
-                        <th class="px-3 py-2 text-right">Harga</th>
+                        <th class="px-3 py-2 whitespace-nowrap">Nama Barang</th>
+                        <th class="px-3 py-2 text-right whitespace-nowrap">Harga</th>
                         <th class="px-3 py-2 text-center">Qty</th>
-                        <th class="px-3 py-2 text-right">Subtotal</th>
+                        <th class="px-3 py-2 text-right whitespace-nowrap">Subtotal</th>
                         <th class="px-3 py-2 text-center">Aksi</th>
                       </tr>
                     </thead>
@@ -281,11 +291,11 @@
                   </div>
                 </div>
 
-                <div class="flex gap-3 pt-2">
-                  <button onclick="app.clearCart()" class="px-4 py-2.5 bg-slate-700 hover:bg-slate-600 text-slate-200 rounded-xl text-xs font-semibold transition">
+                <div class="flex flex-col sm:flex-row gap-3 pt-2">
+                  <button onclick="app.clearCart()" class="w-full sm:w-auto px-4 py-2.5 bg-slate-700 hover:bg-slate-600 text-slate-200 rounded-xl text-xs font-semibold transition">
                     <i class="fa-solid fa-trash mr-1"></i> Kosongkan
                   </button>
-                  <button onclick="app.checkoutAndShowInvoice()" class="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold shadow-lg shadow-emerald-600/20 transition">
+                  <button onclick="app.checkoutAndShowInvoice()" class="w-full flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold shadow-lg shadow-emerald-600/20 transition">
                     <i class="fa-solid fa-check mr-1"></i> Selesaikan Transaksi & Cetak Nota
                   </button>
                 </div>
@@ -296,23 +306,23 @@
 
         <!-- TAB 3: MASTER STOK BARANG -->
         <div id="tab-database-barang" class="tab-content hidden space-y-6">
-          <div class="flex justify-between items-center">
+          <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
             <div>
               <h2 class="text-xl font-bold text-slate-100">Master Stok Barang</h2>
               <p class="text-xs text-slate-400">Kelola database produk, harga beli/jual, serta minimum batas stok.</p>
             </div>
-            <button onclick="app.openNewItemModal()" class="px-4 py-2 bg-brand-600 hover:bg-brand-500 text-white rounded-xl text-xs font-semibold shadow-md shadow-brand-600/20 transition flex items-center gap-2">
+            <button onclick="app.openNewItemModal()" class="w-full md:w-auto px-4 py-2 bg-brand-600 hover:bg-brand-500 text-white rounded-xl text-xs font-semibold shadow-md shadow-brand-600/20 transition flex items-center justify-center gap-2">
               <i class="fa-solid fa-plus"></i> Tambah Barang Baru
             </button>
           </div>
 
           <!-- Filters bar -->
-          <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl flex flex-wrap gap-4 items-center justify-between">
+          <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between">
             <div class="flex-1 min-w-[240px]">
               <input type="text" id="itemSearchInput" oninput="app.renderMasterItemsTable()" placeholder="Cari nama barang atau SKU..." class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-200">
             </div>
             <div class="flex items-center gap-2">
-              <select id="itemFilterCategory" onchange="app.renderMasterItemsTable()" class="bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-200">
+              <select id="itemFilterCategory" onchange="app.renderMasterItemsTable()" class="w-full md:w-auto bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-200">
                 <option value="ALL">Semua Kategori</option>
                 <option value="Sembako">Sembako</option>
                 <option value="Minuman">Minuman</option>
@@ -325,8 +335,8 @@
 
           <!-- Items Table -->
           <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
-            <div class="overflow-x-auto">
-              <table class="w-full text-left text-xs">
+            <div class="overflow-x-auto scrollbar-thin scrollbar-thumb-slate-800">
+              <table class="w-full text-left text-xs min-w-[700px]">
                 <thead class="bg-slate-800/80 text-slate-400 border-b border-slate-800">
                   <tr>
                     <th class="px-4 py-3">SKU</th>
@@ -349,34 +359,34 @@
 
         <!-- TAB 4: INPUT PEMBELIAN MASSAL -->
         <div id="tab-database-pembelian" class="tab-content hidden space-y-6">
-          <div class="flex justify-between items-center">
+          <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
             <div>
-              <h2 class="text-xl font-bold text-slate-100">Input Pembelian Massal (Excel-Style Grid)</h2>
+              <h2 class="text-xl font-bold text-slate-100">Input Pembelian Massal</h2>
               <p class="text-xs text-slate-400">Catat restock pembelian barang secara cepat dalam bentuk tabel grid interaktif.</p>
             </div>
-            <button onclick="purchaseGrid.saveAll()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold shadow-md shadow-emerald-600/20 transition flex items-center gap-2">
-              <i class="fa-solid fa-floppy-disk"></i> Simpan Seluruh Pembelian
+            <button onclick="purchaseGrid.saveAll()" class="w-full md:w-auto px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold shadow-md shadow-emerald-600/20 transition flex items-center justify-center gap-2">
+              <i class="fa-solid fa-floppy-disk"></i> Simpan Pembelian
             </button>
           </div>
 
           <!-- Grid Meta Toolbar -->
-          <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl flex flex-wrap gap-4 items-center justify-between">
-            <div class="flex items-center gap-3">
+          <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between">
+            <div class="flex flex-col md:flex-row items-stretch md:items-center gap-3">
               <div>
                 <label class="block text-[10px] text-slate-400 mb-1">Default Tanggal</label>
-                <input type="date" id="purchaseBatchDate" class="bg-slate-800 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-slate-200">
+                <input type="date" id="purchaseBatchDate" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-slate-200">
               </div>
               <div>
                 <label class="block text-[10px] text-slate-400 mb-1">Default Supplier</label>
-                <input type="text" id="purchaseBatchSupplier" placeholder="Nama Supplier..." class="bg-slate-800 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-slate-200">
+                <input type="text" id="purchaseBatchSupplier" placeholder="Nama Supplier..." class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-slate-200">
               </div>
             </div>
             <div class="flex items-center gap-2">
-              <button onclick="purchaseGrid.addRow()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl text-xs text-brand-300">
-                <i class="fa-solid fa-plus mr-1"></i> Tambah 1 Baris
+              <button onclick="purchaseGrid.addRow()" class="flex-1 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl text-xs text-brand-300">
+                <i class="fa-solid fa-plus mr-1"></i> 1 Baris
               </button>
-              <button onclick="purchaseGrid.addBulkRows(5)" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl text-xs text-brand-300">
-                <i class="fa-solid fa-plus mr-1"></i> Tambah 5 Baris
+              <button onclick="purchaseGrid.addBulkRows(5)" class="flex-1 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl text-xs text-brand-300">
+                <i class="fa-solid fa-plus mr-1"></i> 5 Baris
               </button>
             </div>
           </div>
@@ -384,7 +394,7 @@
           <!-- Grid Table -->
           <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
             <div class="overflow-x-auto max-h-[420px] scrollbar-thin scrollbar-thumb-slate-800">
-              <table class="w-full text-left text-xs">
+              <table class="w-full text-left text-xs min-w-[850px]">
                 <thead class="bg-slate-800 text-slate-400 sticky top-0 z-10">
                   <tr>
                     <th class="px-3 py-2 text-center w-12">No</th>
@@ -413,10 +423,10 @@
             <h3 class="text-sm font-bold text-slate-200 mb-3">Riwayat Database Pembelian Tercatat</h3>
             <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
               <div class="p-3 border-b border-slate-800 flex justify-between items-center">
-                <input type="text" id="purchaseSearchInput" oninput="app.renderPurchasesTable()" placeholder="Cari riwayat pembelian..." class="bg-slate-800 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-slate-200 w-72">
+                <input type="text" id="purchaseSearchInput" oninput="app.renderPurchasesTable()" placeholder="Cari riwayat pembelian..." class="bg-slate-800 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-slate-200 w-full md:w-72">
               </div>
-              <div class="overflow-x-auto max-h-72">
-                <table class="w-full text-left text-xs">
+              <div class="overflow-x-auto max-h-72 scrollbar-thin scrollbar-thumb-slate-800">
+                <table class="w-full text-left text-xs min-w-[700px]">
                   <thead class="bg-slate-800/60 text-slate-400 sticky top-0">
                     <tr>
                       <th class="px-4 py-2.5">Tanggal</th>
@@ -439,17 +449,17 @@
 
         <!-- TAB 5: TREN HARGA & MARGIN -->
         <div id="tab-tren-harga" class="tab-content hidden space-y-6">
-          <div class="flex justify-between items-center">
+          <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
             <div>
-              <h2 class="text-xl font-bold text-slate-100">Analisis Tren Harga & Margin Keuntungan</h2>
+              <h2 class="text-xl font-bold text-slate-100">Analisis Tren Harga & Margin</h2>
               <p class="text-xs text-slate-400">Monitor perbandingan harga modal dan harga jual antar produk.</p>
             </div>
-            <div>
-              <select id="priceTrendSort" onchange="app.renderPriceTrends()" class="bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200">
+            <div class="w-full md:w-auto">
+              <select id="priceTrendSort" onchange="app.renderPriceTrends()" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200">
                 <option value="DESC_BUY">Urutkan: Modal Tertinggi</option>
                 <option value="ASC_BUY">Urutkan: Modal Terendah</option>
                 <option value="DESC_SELL">Urutkan: Harga Jual Tertinggi</option>
-                <option value="DESC_MARGIN">Urutkan: Margin Keuntungan Tertinggi</option>
+                <option value="DESC_MARGIN">Urutkan: Margin Tertinggi</option>
               </select>
             </div>
           </div>
@@ -467,33 +477,33 @@
 
         <!-- TAB 6: KARTU STOK LEDGER -->
         <div id="tab-kartu-stok" class="tab-content hidden space-y-6">
-          <div class="flex justify-between items-center">
+          <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
             <div>
               <h2 class="text-xl font-bold text-slate-100">Kartu Stok Ledger Barang</h2>
               <p class="text-xs text-slate-400">Riwayat detail arus masuk dan keluar barang secara kronologis.</p>
             </div>
-            <div>
-              <select id="stockCardItemSelect" onchange="app.renderStockCardLedger()" class="bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200">
+            <div class="w-full md:w-auto">
+              <select id="stockCardItemSelect" onchange="app.renderStockCardLedger()" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200">
                 <!-- Options populated dynamically -->
               </select>
             </div>
           </div>
 
-          <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden p-5 space-y-4">
-            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden p-4 md:p-5 space-y-4">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-800 pb-3">
               <div>
                 <h3 id="stockCardTitle" class="text-sm font-bold text-slate-100">-</h3>
                 <p id="stockCardSubtitle" class="text-xs text-slate-400">-</p>
               </div>
-              <div class="flex gap-4 text-xs font-mono">
-                <div class="bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-xl text-emerald-400">Total Masuk: <span id="stockCardTotalIn">0</span></div>
-                <div class="bg-rose-500/10 border border-rose-500/20 px-3 py-1.5 rounded-xl text-rose-400">Total Keluar: <span id="stockCardTotalOut">0</span></div>
-                <div class="bg-brand-500/10 border border-brand-500/20 px-3 py-1.5 rounded-xl text-brand-400 font-bold">Saldo Akhir: <span id="stockCardCurrentBalance">0</span></div>
+              <div class="flex flex-wrap gap-2 text-[11px] font-mono w-full md:w-auto">
+                <div class="bg-emerald-500/10 border border-emerald-500/20 px-2 py-1.5 rounded-xl text-emerald-400 flex-1 text-center">Masuk: <span id="stockCardTotalIn">0</span></div>
+                <div class="bg-rose-500/10 border border-rose-500/20 px-2 py-1.5 rounded-xl text-rose-400 flex-1 text-center">Keluar: <span id="stockCardTotalOut">0</span></div>
+                <div class="bg-brand-500/10 border border-brand-500/20 px-2 py-1.5 rounded-xl text-brand-400 font-bold flex-1 text-center">Saldo: <span id="stockCardCurrentBalance">0</span></div>
               </div>
             </div>
 
-            <div class="overflow-x-auto">
-              <table class="w-full text-left text-xs">
+            <div class="overflow-x-auto scrollbar-thin scrollbar-thumb-slate-800">
+              <table class="w-full text-left text-xs min-w-[500px]">
                 <thead class="bg-slate-800/80 text-slate-400">
                   <tr>
                     <th class="px-4 py-2.5">Tanggal</th>
@@ -513,40 +523,40 @@
 
         <!-- TAB 7: LAPORAN BULANAN -->
         <div id="tab-laporan-bulanan" class="tab-content hidden space-y-6">
-          <div class="flex justify-between items-center">
+          <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
             <div>
               <h2 class="text-xl font-bold text-slate-100">Laporan Keuangan Bulanan</h2>
               <p class="text-xs text-slate-400">Rekapitulasi omset penjualan, modal pembelian, dan laba bersih per periode.</p>
             </div>
-            <div class="flex gap-2">
-              <select id="reportMonth" onchange="app.renderMonthlyReport()" class="bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200">
+            <div class="flex flex-wrap md:flex-nowrap gap-2 w-full md:w-auto">
+              <select id="reportMonth" onchange="app.renderMonthlyReport()" class="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200">
                 <option value="10">Oktober</option>
                 <option value="11">November</option>
                 <option value="12">Desember</option>
               </select>
-              <select id="reportYear" onchange="app.renderMonthlyReport()" class="bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200">
+              <select id="reportYear" onchange="app.renderMonthlyReport()" class="w-24 bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200">
                 <option value="2026">2026</option>
               </select>
-              <button onclick="app.printMonthlyReport()" class="px-4 py-2 bg-brand-600 hover:bg-brand-500 text-white rounded-xl text-xs font-semibold shadow-md shadow-brand-600/20 transition flex items-center gap-2">
+              <button onclick="app.printMonthlyReport()" class="w-full md:w-auto px-4 py-2 bg-brand-600 hover:bg-brand-500 text-white rounded-xl text-xs font-semibold shadow-md shadow-brand-600/20 transition flex items-center justify-center gap-2">
                 <i class="fa-solid fa-print"></i> Cetak Laporan
               </button>
             </div>
           </div>
 
           <!-- Printable Report Sheet -->
-          <div id="printable-area" class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-6 print:bg-white print:text-black print:border-none print:shadow-none">
+          <div id="printable-area" class="bg-slate-900 border border-slate-800 rounded-2xl p-4 md:p-6 space-y-6 print:bg-white print:text-black print:border-none print:shadow-none">
             <div class="flex justify-between items-start border-b border-slate-800 pb-4 print:border-slate-300">
               <div>
-                <h3 class="text-lg font-bold text-slate-100 print:text-black">C'DAN SHOP MANAGEMENT SYSTEM</h3>
+                <h3 class="text-base md:text-lg font-bold text-slate-100 print:text-black">C'DAN SHOP MANAGEMENT SYSTEM</h3>
                 <p id="reportPeriodText" class="text-xs text-slate-400 print:text-slate-600 font-medium mt-1">Periode Laporan Bulanan</p>
               </div>
-              <div class="text-right text-xs text-slate-400 print:text-slate-600">
+              <div class="text-right text-[10px] md:text-xs text-slate-400 print:text-slate-600">
                 <p id="reportDateStamp">Tanggal Cetak: -</p>
               </div>
             </div>
 
             <!-- Report Summary Cards -->
-            <div class="grid grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
               <div class="bg-slate-800/60 p-4 rounded-xl border border-slate-700/60 print:border-slate-300 print:bg-slate-100">
                 <p class="text-xs text-slate-400 print:text-slate-600">Total Pembelian Bulanan</p>
                 <h4 id="reportSumPurchases" class="text-base font-bold text-brand-400 print:text-black font-mono mt-1">Rp 0</h4>
@@ -562,8 +572,8 @@
             </div>
 
             <!-- Report Table -->
-            <div class="overflow-x-auto">
-              <table class="w-full text-left text-xs">
+            <div class="overflow-x-auto scrollbar-thin scrollbar-thumb-slate-800">
+              <table class="w-full text-left text-xs min-w-[700px]">
                 <thead class="bg-slate-800/80 text-slate-400 print:bg-slate-200 print:text-black">
                   <tr>
                     <th class="px-3 py-2.5">No</th>
@@ -587,12 +597,12 @@
     </div>
   </div>
 
-  <!-- WATERMARK (Added as requested, without breaking structure) -->
+  <!-- WATERMARK -->
   <div class="fixed bottom-3 right-4 pointer-events-none z-50 print:hidden opacity-40 hover:opacity-100 transition-opacity">
     <span class="text-[10px] text-slate-400 font-medium tracking-widest font-mono">© 2026 C'DAN SHOP</span>
   </div>
 
-  <!-- MODALS AREA -->
+  <!-- MODALS AREA (Tetap sama seperti aslinya) -->
 
   <!-- Custom Confirm Modal -->
   <div id="modalCustomConfirm" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
@@ -766,7 +776,6 @@
     import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
     import { getFirestore, collection, onSnapshot, doc, setDoc, addDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-    // Custom Toast Notification System (Replacing native alert)
     window.customAlert = function(msg, type = 'info') {
       const container = document.getElementById('toastContainer');
       const toast = document.createElement('div');
@@ -784,7 +793,6 @@
       }, 3500);
     };
 
-    // Custom Confirm System (Replacing native confirm)
     window.customConfirm = function(msg, callback) {
       const modal = document.getElementById('modalCustomConfirm');
       document.getElementById('customConfirmText').innerText = msg;
@@ -846,20 +854,14 @@
     };
 
     async function initFirebase() {
-      if (!firebaseConfig) {
-        console.log("Firebase config not found, using local memory state.");
-        return;
-      }
+      if (!firebaseConfig) return;
       try {
         const firebaseAppInstance = initializeApp(firebaseConfig);
         db = getFirestore(firebaseAppInstance);
         auth = getAuth(firebaseAppInstance);
 
-        if (initialAuthToken) {
-          await signInWithCustomToken(auth, initialAuthToken);
-        } else {
-          await signInAnonymously(auth);
-        }
+        if (initialAuthToken) await signInWithCustomToken(auth, initialAuthToken);
+        else await signInAnonymously(auth);
 
         onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'items'), (snapshot) => {
           if (!snapshot.empty) {
@@ -868,8 +870,7 @@
             state.items = list;
             app.renderAllViews();
           }
-        }, (err) => console.log('Firestore items error:', err));
-
+        });
         onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'purchases'), (snapshot) => {
           if (!snapshot.empty) {
             const list = [];
@@ -877,8 +878,7 @@
             state.purchases = list;
             app.renderAllViews();
           }
-        }, (err) => console.log('Firestore purchases error:', err));
-
+        });
         onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'sales'), (snapshot) => {
           if (!snapshot.empty) {
             const list = [];
@@ -886,20 +886,16 @@
             state.sales = list;
             app.renderAllViews();
           }
-        }, (err) => console.log('Firestore sales error:', err));
+        });
 
       } catch (e) {
-        console.warn('Firebase init fallback to local memory state:', e);
+        console.warn('Firebase fallback to local:', e);
       }
     }
 
     window.purchaseGrid = {
-      rows: [
-        { date: new Date().toISOString().split('T')[0], itemName: '', price: 0, qty: 1, supplier: '' }
-      ],
-      init() {
-        this.render();
-      },
+      rows: [ { date: new Date().toISOString().split('T')[0], itemName: '', price: 0, qty: 1, supplier: '' } ],
+      init() { this.render(); },
       addRow() {
         this.rows.push({ date: new Date().toISOString().split('T')[0], itemName: '', price: 0, qty: 1, supplier: '' });
         this.render();
@@ -944,14 +940,11 @@
           `;
           tbody.appendChild(tr);
         });
-
         document.getElementById('gridGrandTotal').innerText = `Rp ${grandTotal.toLocaleString('id-ID')}`;
       },
       renderTotal() {
         let grandTotal = 0;
-        this.rows.forEach(r => {
-          grandTotal += Number(r.price || 0) * Number(r.qty || 0);
-        });
+        this.rows.forEach(r => grandTotal += Number(r.price || 0) * Number(r.qty || 0));
         document.getElementById('gridGrandTotal').innerText = `Rp ${grandTotal.toLocaleString('id-ID')}`;
       },
       async saveAll() {
@@ -964,43 +957,23 @@
             const finalDate = r.date || batchDate;
             const finalSupplier = r.supplier.trim() || batchSupplier;
             
-            const newPurchase = {
-              date: finalDate,
-              itemName: r.itemName.trim(),
-              price: Number(r.price),
-              qty: Number(r.qty),
-              supplier: finalSupplier
-            };
-
+            const newPurchase = { date: finalDate, itemName: r.itemName.trim(), price: Number(r.price), qty: Number(r.qty), supplier: finalSupplier };
             state.purchases.push(newPurchase);
 
-            if (db) {
-              const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'purchases');
-              await addDoc(colRef, newPurchase);
-            }
+            if (db) await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'purchases'), newPurchase);
 
             const existingItem = state.items.find(i => i.name.toLowerCase() === r.itemName.trim().toLowerCase());
             if (!existingItem) {
               const newItem = {
-                sku: `BRG-${Math.floor(100 + Math.random() * 900)}`,
-                name: r.itemName.trim(),
-                category: 'Lainnya',
-                buyPrice: Number(r.price),
-                sellPrice: Math.round(Number(r.price) * 1.2),
-                initialStock: 0,
-                minStock: 5
+                sku: `BRG-${Math.floor(100 + Math.random() * 900)}`, name: r.itemName.trim(), category: 'Lainnya',
+                buyPrice: Number(r.price), sellPrice: Math.round(Number(r.price) * 1.2), initialStock: 0, minStock: 5
               };
               state.items.push(newItem);
-              if (db) {
-                const itemRef = collection(db, 'artifacts', appId, 'public', 'data', 'items');
-                await addDoc(itemRef, newItem);
-              }
+              if (db) await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'items'), newItem);
             }
-
             validCount++;
           }
         }
-
         if (validCount > 0) {
           window.customAlert(`Berhasil menyimpan ${validCount} baris transaksi pembelian ke database!`);
           this.rows = [{ date: new Date().toISOString().split('T')[0], itemName: '', price: 0, qty: 1, supplier: '' }];
@@ -1048,20 +1021,19 @@
           }
         });
 
+        // Tutup sidebar otomatis di mobile setelah di klik
+        const sidebar = document.getElementById('sidebar');
+        if (sidebar && window.innerWidth < 768) {
+          sidebar.classList.add('-translate-x-full');
+        }
+
         this.renderAllViews();
       },
       calculateRealtimeStock(itemName) {
         const item = state.items.find(i => i.name.toLowerCase() === itemName.toLowerCase());
         const initial = item ? Number(item.initialStock || 0) : 0;
-        
-        const totalPurchased = state.purchases
-          .filter(p => p.itemName.toLowerCase() === itemName.toLowerCase())
-          .reduce((sum, p) => sum + Number(p.qty || 0), 0);
-
-        const totalSold = state.sales
-          .filter(s => s.itemName.toLowerCase() === itemName.toLowerCase())
-          .reduce((sum, s) => sum + Number(s.qty || 0), 0);
-
+        const totalPurchased = state.purchases.filter(p => p.itemName.toLowerCase() === itemName.toLowerCase()).reduce((sum, p) => sum + Number(p.qty || 0), 0);
+        const totalSold = state.sales.filter(s => s.itemName.toLowerCase() === itemName.toLowerCase()).reduce((sum, s) => sum + Number(s.qty || 0), 0);
         return initial + totalPurchased - totalSold;
       },
       renderAllViews() {
@@ -1078,15 +1050,13 @@
         document.getElementById('sbTotalItems').innerText = state.items.length;
         let critical = 0;
         state.items.forEach(item => {
-          const stock = this.calculateRealtimeStock(item.name);
-          if (stock <= (item.minStock || 5)) critical++;
+          if (this.calculateRealtimeStock(item.name) <= (item.minStock || 5)) critical++;
         });
         document.getElementById('sbCriticalItems').innerText = critical;
         
         const lowBadge = document.getElementById('lowStockBadge');
         if (critical > 0) {
-          lowBadge.classList.remove('hidden');
-          lowBadge.innerText = critical;
+          lowBadge.classList.remove('hidden'); lowBadge.innerText = critical;
         } else {
           lowBadge.classList.add('hidden');
         }
@@ -1112,9 +1082,7 @@
         document.getElementById('dashTotalProducts').innerText = `${state.items.length} SKU`;
 
         let lowCount = 0;
-        state.items.forEach(i => {
-          if (this.calculateRealtimeStock(i.name) <= (i.minStock || 5)) lowCount++;
-        });
+        state.items.forEach(i => { if (this.calculateRealtimeStock(i.name) <= (i.minStock || 5)) lowCount++; });
         document.getElementById('dashWarningCount').innerText = `${lowCount} Item`;
 
         const ctxBar = document.getElementById('chartTrendBar').getContext('2d');
@@ -1122,24 +1090,19 @@
         state.chartTrend = new Chart(ctxBar, {
           type: 'bar',
           data: {
-            labels: ['Total Pembelian (Modal)', 'Total Penjualan (Omset)'],
+            labels: ['Pembelian (Modal)', 'Penjualan (Omset)'],
             datasets: [{
-              label: 'Nilai Transaksi (Rp)',
+              label: 'Nilai (Rp)',
               data: [totalPurchasesCost, totalSalesRevenue],
               backgroundColor: ['rgba(14, 165, 233, 0.7)', 'rgba(16, 185, 129, 0.7)'],
               borderColor: ['#0ea5e9', '#10b981'],
-              borderWidth: 2,
-              borderRadius: 8
+              borderWidth: 2, borderRadius: 8
             }]
           },
           options: {
-            responsive: true,
-            maintainAspectRatio: false,
+            responsive: true, maintainAspectRatio: false,
             plugins: { legend: { display: false } },
-            scales: {
-              y: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } },
-              x: { ticks: { color: '#94a3b8' }, grid: { display: false } }
-            }
+            scales: { y: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } }, x: { ticks: { color: '#94a3b8' }, grid: { display: false } } }
           }
         });
 
@@ -1164,11 +1127,8 @@
             }]
           },
           options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-              legend: { position: 'bottom', labels: { color: '#cbd5e1', font: { size: 10 } } }
-            }
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { position: 'bottom', labels: { color: '#cbd5e1', font: { size: 10 } } } }
           }
         });
       },
@@ -1246,26 +1206,18 @@
         const initialStock = Number(document.getElementById('modalItemInitialStock').value);
         const minStock = Number(document.getElementById('modalItemMinStock').value);
 
-        if (!name) {
-          window.customAlert('Nama barang wajib diisi.', 'error');
-          return;
-        }
+        if (!name) { window.customAlert('Nama barang wajib diisi.', 'error'); return; }
 
         const itemData = { sku, name, category, buyPrice, sellPrice, initialStock, minStock };
 
         if (id) {
           const index = state.items.findIndex(i => i.id === id);
           if (index !== -1) state.items[index] = { ...state.items[index], ...itemData };
-          if (db) {
-            await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'items', id), itemData, { merge: true });
-          }
+          if (db) await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'items', id), itemData, { merge: true });
         } else {
           const newId = `item_${Date.now()}`;
-          const newItem = { id: newId, ...itemData };
-          state.items.push(newItem);
-          if (db) {
-            await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'items', newId), itemData);
-          }
+          state.items.push({ id: newId, ...itemData });
+          if (db) await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'items', newId), itemData);
         }
 
         this.closeModal('modalMasterItem');
@@ -1279,9 +1231,8 @@
         if (!tbody) return;
 
         tbody.innerHTML = '';
-        state.purchases.filter(p => {
-          return p.itemName.toLowerCase().includes(query) || (p.supplier && p.supplier.toLowerCase().includes(query));
-        }).forEach(p => {
+        state.purchases.filter(p => p.itemName.toLowerCase().includes(query) || (p.supplier && p.supplier.toLowerCase().includes(query)))
+        .forEach(p => {
           const totalCost = Number(p.price || 0) * Number(p.qty || 0);
           const tr = document.createElement('tr');
           tr.className = "hover:bg-slate-800/50 transition";
@@ -1294,7 +1245,7 @@
             <td class="px-4 py-3 text-slate-400">${p.supplier || '-'}</td>
             <td class="px-4 py-3 text-center">
               <button onclick="app.openEditPurchaseModal('${p.id}')" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-brand-300 rounded-lg border border-slate-700 text-xs transition">
-                <i class="fa-solid fa-edit mr-1"></i> Edit
+                <i class="fa-solid fa-edit"></i> Edit
               </button>
             </td>
           `;
@@ -1323,24 +1274,20 @@
         const index = state.purchases.findIndex(p => p.id === id);
         if (index !== -1) {
           state.purchases[index] = { ...state.purchases[index], date, supplier, itemName, price, qty };
-          if (db && id) {
-            await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'purchases', id), { date, supplier, itemName, price, qty }, { merge: true });
-          }
+          if (db && id) await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'purchases', id), { date, supplier, itemName, price, qty }, { merge: true });
         }
         this.closeModal('modalEditPurchase');
         this.renderAllViews();
-        window.customAlert('Perubahan pembelian berhasil disimpan!');
+        window.customAlert('Perubahan berhasil disimpan!');
       },
       async deletePurchaseRecord() {
         const id = document.getElementById('editPurchaseId').value;
-        window.customConfirm('Yakin ingin menghapus record pembelian ini?', async () => {
+        window.customConfirm('Yakin ingin menghapus record ini?', async () => {
           state.purchases = state.purchases.filter(p => p.id !== id);
-          if (db && id) {
-            await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'purchases', id));
-          }
+          if (db && id) await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'purchases', id));
           app.closeModal('modalEditPurchase');
           app.renderAllViews();
-          window.customAlert('Record pembelian berhasil dihapus.');
+          window.customAlert('Record berhasil dihapus.');
         });
       },
 
@@ -1364,26 +1311,14 @@
           data: {
             labels: sorted.map(i => i.name),
             datasets: [
-              {
-                label: 'Harga Beli Modal (Rp)',
-                data: sorted.map(i => i.buyPrice),
-                backgroundColor: 'rgba(14, 165, 233, 0.8)'
-              },
-              {
-                label: 'Harga Jual POS (Rp)',
-                data: sorted.map(i => i.sellPrice),
-                backgroundColor: 'rgba(16, 185, 129, 0.8)'
-              }
+              { label: 'Harga Beli (Rp)', data: sorted.map(i => i.buyPrice), backgroundColor: 'rgba(14, 165, 233, 0.8)' },
+              { label: 'Harga Jual (Rp)', data: sorted.map(i => i.sellPrice), backgroundColor: 'rgba(16, 185, 129, 0.8)' }
             ]
           },
           options: {
-            responsive: true,
-            maintainAspectRatio: false,
+            responsive: true, maintainAspectRatio: false,
             plugins: { legend: { labels: { color: '#cbd5e1' } } },
-            scales: {
-              y: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } },
-              x: { ticks: { color: '#94a3b8' }, grid: { display: false } }
-            }
+            scales: { y: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } }, x: { ticks: { color: '#94a3b8' }, grid: { display: false } } }
           }
         });
 
@@ -1418,9 +1353,7 @@
 
         let dataListEl = document.getElementById('itemListOptions');
         if (!dataListEl) {
-          dataListEl = document.createElement('datalist');
-          dataListEl.id = 'itemListOptions';
-          document.body.appendChild(dataListEl);
+          dataListEl = document.createElement('datalist'); dataListEl.id = 'itemListOptions'; document.body.appendChild(dataListEl);
         }
         dataListEl.innerHTML = '';
 
@@ -1428,324 +1361,324 @@
         state.items.forEach(item => {
           const stock = this.calculateRealtimeStock(item.name);
           const opt = document.createElement('option');
-          opt.value = item.name;
-          opt.innerText = `${item.name} (Stok: ${stock})`;
+          opt.value = item.name; opt.innerText = `${item.name} (Stok: ${stock})`;
           itemSelect.appendChild(opt);
 
-          const dlOpt = document.createElement('option');
-          dlOpt.value = item.name;
-          dataListEl.appendChild(dlOpt);
+          const dlOpt = document.createElement('option'); dlOpt.value = item.name; dataListEl.appendChild(dlOpt);
         });
 
         document.getElementById('posSaleDate').value = new Date().toISOString().split('T')[0];
 
-        let anyLow = state.items.some(i => this.calculateRealtimeStock(i.name) <= (i.minStock || 5));
-        const posAlert = document.getElementById('posLowStockAlert');
-        if (anyLow && posAlert) posAlert.classList.remove('hidden'); else if(posAlert) posAlert.classList.add('hidden');
-
-        this.renderCart();
+        let hasLowStock = false;
+        state.items.forEach(i => { if (this.calculateRealtimeStock(i.name) <= (i.minStock || 5)) hasLowStock = true; });
+        const alertEl = document.getElementById('posLowStockAlert');
+        if (alertEl) {
+          if (hasLowStock) alertEl.classList.remove('hidden'); else alertEl.classList.add('hidden');
+        }
       },
       handlePosItemSelect() {
         const selectedName = document.getElementById('posItemSelect').value;
-        const infoCard = document.getElementById('posStockInfoCard');
-
-        if (!selectedName) {
-          infoCard.classList.add('hidden');
-          return;
-        }
-
         const item = state.items.find(i => i.name === selectedName);
+        const card = document.getElementById('posStockInfoCard');
         if (item) {
-          infoCard.classList.remove('hidden');
-          const currentStock = this.calculateRealtimeStock(item.name);
-          document.getElementById('posCurrentStockText').innerText = currentStock;
-          document.getElementById('posUnitPriceText').innerText = `Rp ${Number(item.sellPrice).toLocaleString('id-ID')}`;
-          document.getElementById('posItemPrice').value = item.sellPrice;
-          document.getElementById('posItemQty').value = 1;
+          document.getElementById('posItemPrice').value = item.sellPrice || 0;
+          document.getElementById('posCurrentStockText').innerText = this.calculateRealtimeStock(item.name);
+          document.getElementById('posUnitPriceText').innerText = `Rp ${(item.sellPrice || 0).toLocaleString('id-ID')}`;
+          card.classList.remove('hidden');
+        } else {
+          document.getElementById('posItemPrice').value = '';
+          card.classList.add('hidden');
         }
       },
       addItemToCart() {
-        const name = document.getElementById('posItemSelect').value;
-        const qty = Number(document.getElementById('posItemQty').value);
+        const itemName = document.getElementById('posItemSelect').value;
         const price = Number(document.getElementById('posItemPrice').value);
+        const qty = Number(document.getElementById('posItemQty').value);
 
-        if (!name || qty <= 0 || price <= 0) {
-          window.customAlert('Mohon pilih barang dan atur jumlah/harga dengan benar.', 'error');
-          return;
+        if (!itemName || price <= 0 || qty <= 0) return window.customAlert('Mohon pilih barang, harga, dan jumlah dengan benar.', 'error');
+
+        const availableStock = this.calculateRealtimeStock(itemName);
+        if (qty > availableStock) {
+          return window.customAlert(`Stok tidak mencukupi! Tersedia: ${availableStock}`, 'error');
         }
 
-        const currentStock = this.calculateRealtimeStock(name);
-        if (qty > currentStock) {
-          window.customAlert(`Stok tidak mencukupi! Stok saat ini hanya ${currentStock}.`, 'error');
-          return;
-        }
+        const existingItem = state.cart.find(c => c.itemName === itemName);
+        if (existingItem) existingItem.qty += qty;
+        else state.cart.push({ itemName, price, qty });
 
-        state.cart.push({ id: Date.now(), itemName: name, qty, price });
+        document.getElementById('posItemQty').value = 1;
         this.renderCart();
       },
       renderCart() {
         const tbody = document.getElementById('posCartBody');
-        if (!tbody) return;
-
-        tbody.innerHTML = '';
-        let total = 0;
+        let grandTotal = 0;
+        let totalItems = 0;
 
         if (state.cart.length === 0) {
           tbody.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-slate-500 italic">Keranjang masih kosong</td></tr>`;
-        } else {
-          state.cart.forEach((c, idx) => {
-            const sub = c.price * c.qty;
-            total += sub;
-            const tr = document.createElement('tr');
-            tr.className = "hover:bg-slate-800/40";
-            tr.innerHTML = `
-              <td class="px-3 py-2 font-medium text-slate-200">${c.itemName}</td>
-              <td class="px-3 py-2 text-right font-mono">Rp ${c.price.toLocaleString('id-ID')}</td>
-              <td class="px-3 py-2 text-center font-bold">${c.qty}</td>
-              <td class="px-3 py-2 text-right font-mono text-emerald-400">Rp ${sub.toLocaleString('id-ID')}</td>
-              <td class="px-3 py-2 text-center">
-                <button onclick="app.removeCartItem(${idx})" class="text-rose-400 hover:text-rose-300"><i class="fa-solid fa-trash"></i></button>
-              </td>
-            `;
-            tbody.appendChild(tr);
-          });
-        }
-
-        document.getElementById('cartItemCount').innerText = `${state.cart.length} Item`;
-        document.getElementById('cartGrandTotal').innerText = `Rp ${total.toLocaleString('id-ID')}`;
-
-        const cashInput = document.getElementById('posCashInput');
-        const changeOutput = document.getElementById('posChangeOutput');
-        if(cashInput) cashInput.value = '';
-        if(changeOutput) {
-            changeOutput.innerText = 'Rp 0';
-            changeOutput.className = "text-base font-bold text-brand-400";
-        }
-      },
-
-      calculateChange() {
-        const totalStr = document.getElementById('cartGrandTotal').innerText.replace(/[^0-9-]/g, '');
-        const totalAmount = Number(totalStr) || 0;
-        const cashPaid = Number(document.getElementById('posCashInput').value) || 0;
-        
-        const change = cashPaid - totalAmount;
-        const changeOutput = document.getElementById('posChangeOutput');
-        
-        if (cashPaid === 0) {
-           changeOutput.innerText = `Rp 0`;
-           changeOutput.className = "text-base font-bold text-brand-400";
-        } else if (change < 0) {
-           changeOutput.innerText = `Kurang Rp ${Math.abs(change).toLocaleString('id-ID')}`;
-           changeOutput.className = "text-base font-bold text-rose-400";
-        } else {
-           changeOutput.innerText = `Rp ${change.toLocaleString('id-ID')}`;
-           changeOutput.className = "text-base font-bold text-emerald-400";
-        }
-      },
-      removeCartItem(idx) {
-        state.cart.splice(idx, 1);
-        this.renderCart();
-      },
-      clearCart() {
-        state.cart = [];
-        this.renderCart();
-      },
-      async checkoutAndShowInvoice() {
-        if (state.cart.length === 0) {
-          window.customAlert('Keranjang belanja kosong.', 'error');
+          document.getElementById('cartGrandTotal').innerText = 'Rp 0';
+          document.getElementById('cartItemCount').innerText = '0 Item';
+          this.calculateChange();
           return;
         }
 
-        const saleDate = document.getElementById('posSaleDate').value || new Date().toISOString().split('T')[0];
-
-        for (const c of state.cart) {
-          const newSale = { date: saleDate, itemName: c.itemName, price: c.price, qty: c.qty };
-          state.sales.push(newSale);
-
-          if (db) {
-            const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'sales');
-            await addDoc(colRef, newSale);
-          }
-        }
-
-        document.getElementById('invStoreName').innerText = state.store.name;
-        document.getElementById('invStoreAddr').innerText = state.store.address;
-        document.getElementById('invNo').innerText = `INV-${Math.floor(1000 + Math.random() * 9000)}`;
-        document.getElementById('invDate').innerText = saleDate;
-
-        const invList = document.getElementById('invItemsList');
-        invList.innerHTML = '';
-        let grandTotal = 0;
-
-        state.cart.forEach(c => {
-          const sub = c.price * c.qty;
-          grandTotal += sub;
-          const row = document.createElement('div');
-          row.className = "flex justify-between";
-          row.innerHTML = `
-            <span>${c.itemName} x${c.qty}</span>
-            <span>Rp ${sub.toLocaleString('id-ID')}</span>
-          `;
-          invList.appendChild(row);
-        });
-
-        const cashInputVal = Number(document.getElementById('posCashInput').value);
-        const cashPaid = cashInputVal > 0 ? cashInputVal : grandTotal;
-        const change = cashPaid - grandTotal;
-
-        document.getElementById('invTotalAmount').innerText = `Rp ${grandTotal.toLocaleString('id-ID')}`;
-        document.getElementById('invCashPaid').innerText = `Rp ${cashPaid.toLocaleString('id-ID')}`;
-        document.getElementById('invChange').innerText = `Rp ${change >= 0 ? change.toLocaleString('id-ID') : 0}`;
-
-        state.cart = [];
-        this.renderCart();
-        this.openModal('modalInvoicePreview');
-        this.renderAllViews();
-      },
-      printInvoiceNow() {
-        window.print();
-      },
-      renderStockCardLedger() {
-        const select = document.getElementById('stockCardItemSelect');
-        if (!select) return;
-
-        select.innerHTML = '';
-        state.items.forEach(i => {
-          const opt = document.createElement('option');
-          opt.value = i.name;
-          opt.innerText = i.name;
-          select.appendChild(opt);
-        });
-
-        const selectedName = select.value || (state.items[0] ? state.items[0].name : '');
-        if (!selectedName) return;
-
-        const itemMaster = state.items.find(i => i.name === selectedName);
-        document.getElementById('stockCardTitle').innerText = selectedName;
-        document.getElementById('stockCardSubtitle').innerText = `Kode SKU: ${itemMaster?.sku || '-'}`;
-
-        const purchases = state.purchases.filter(p => p.itemName === selectedName);
-        const sales = state.sales.filter(s => s.itemName === selectedName);
-
-        let events = [];
-        let initialStock = itemMaster ? Number(itemMaster.initialStock || 0) : 0;
-
-        if (initialStock > 0) {
-          events.push({ date: 'Awal', type: 'INIT', ref: 'Stok Awal Sistem', qtyIn: initialStock, qtyOut: 0 });
-        }
-
-        purchases.forEach(p => {
-          events.push({ date: p.date, type: 'IN', ref: `Restock (${p.supplier || 'Pembelian'})`, qtyIn: Number(p.qty), qtyOut: 0 });
-        });
-
-        sales.forEach(s => {
-          events.push({ date: s.date, type: 'OUT', ref: 'Penjualan POS Nota', qtyIn: 0, qtyOut: Number(s.qty) });
-        });
-
-        events.sort((a, b) => a.date.localeCompare(b.date));
-
-        const tbody = document.getElementById('stockCardLedgerBody');
         tbody.innerHTML = '';
-
-        let runningBalance = 0;
-        let sumIn = 0;
-        let sumOut = 0;
-
-        events.forEach(e => {
-          runningBalance += (e.qtyIn - e.qtyOut);
-          sumIn += e.qtyIn;
-          sumOut += e.qtyOut;
+        state.cart.forEach((c, idx) => {
+          const subtotal = c.price * c.qty;
+          grandTotal += subtotal;
+          totalItems += c.qty;
 
           const tr = document.createElement('tr');
           tr.className = "hover:bg-slate-800/40";
           tr.innerHTML = `
-            <td class="px-4 py-3 font-mono text-slate-400">${e.date}</td>
-            <td class="px-4 py-3 font-medium text-slate-200">${e.ref}</td>
-            <td class="px-4 py-3 text-center text-emerald-400 font-bold">${e.qtyIn > 0 ? '+' + e.qtyIn : '-'}</td>
-            <td class="px-4 py-3 text-center text-rose-400 font-bold">${e.qtyOut > 0 ? '-' + e.qtyOut : '-'}</td>
-            <td class="px-4 py-3 text-center font-bold text-brand-300 font-mono">${runningBalance}</td>
+            <td class="px-3 py-2 font-semibold text-slate-200">${c.itemName}</td>
+            <td class="px-3 py-2 text-right font-mono">Rp ${c.price.toLocaleString('id-ID')}</td>
+            <td class="px-3 py-2 text-center font-bold text-slate-200">${c.qty}</td>
+            <td class="px-3 py-2 text-right font-mono text-emerald-400">Rp ${subtotal.toLocaleString('id-ID')}</td>
+            <td class="px-3 py-2 text-center">
+              <button onclick="app.removeCartItem(${idx})" class="text-rose-400 hover:text-rose-300 transition p-1"><i class="fa-solid fa-xmark"></i></button>
+            </td>
           `;
           tbody.appendChild(tr);
         });
 
-        document.getElementById('stockCardTotalIn').innerText = sumIn;
-        document.getElementById('stockCardTotalOut').innerText = sumOut;
-        document.getElementById('stockCardCurrentBalance').innerText = runningBalance;
+        document.getElementById('cartGrandTotal').innerText = `Rp ${grandTotal.toLocaleString('id-ID')}`;
+        document.getElementById('cartItemCount').innerText = `${totalItems} Item`;
+        this.calculateChange();
       },
+      removeCartItem(index) {
+        state.cart.splice(index, 1);
+        this.renderCart();
+      },
+      clearCart() {
+        state.cart = [];
+        document.getElementById('posCashInput').value = '';
+        this.renderCart();
+      },
+      calculateChange() {
+        const grandTotal = state.cart.reduce((sum, c) => sum + (c.price * c.qty), 0);
+        const cash = Number(document.getElementById('posCashInput').value || 0);
+        const changeEl = document.getElementById('posChangeOutput');
+
+        if (cash >= grandTotal && grandTotal > 0) {
+          changeEl.innerText = `Rp ${(cash - grandTotal).toLocaleString('id-ID')}`;
+          changeEl.classList.remove('text-brand-400', 'text-rose-400'); changeEl.classList.add('text-emerald-400');
+        } else if (cash > 0) {
+          changeEl.innerText = `Kurang Rp ${(grandTotal - cash).toLocaleString('id-ID')}`;
+          changeEl.classList.remove('text-brand-400', 'text-emerald-400'); changeEl.classList.add('text-rose-400');
+        } else {
+          changeEl.innerText = 'Rp 0';
+          changeEl.classList.remove('text-rose-400', 'text-emerald-400'); changeEl.classList.add('text-brand-400');
+        }
+      },
+      async checkoutAndShowInvoice() {
+        if (state.cart.length === 0) return window.customAlert('Keranjang kosong!', 'error');
+        
+        const grandTotal = state.cart.reduce((sum, c) => sum + (c.price * c.qty), 0);
+        const cash = Number(document.getElementById('posCashInput').value || 0);
+
+        if (cash < grandTotal) return window.customAlert('Uang pembayaran kurang!', 'error');
+
+        const saleDate = document.getElementById('posSaleDate').value || new Date().toISOString().split('T')[0];
+        
+        for (const item of state.cart) {
+          const newSale = { date: saleDate, itemName: item.itemName, price: item.price, qty: item.qty };
+          state.sales.push(newSale);
+          if (db) await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'sales'), newSale);
+        }
+
+        const invNo = `INV-${Date.now().toString().slice(-6)}`;
+        document.getElementById('invStoreName').innerText = state.store.name;
+        document.getElementById('invStoreAddr').innerText = state.store.address;
+        document.getElementById('invNo').innerText = invNo;
+        document.getElementById('invDate').innerText = saleDate;
+
+        const invList = document.getElementById('invItemsList');
+        invList.innerHTML = '';
+        state.cart.forEach(c => {
+          invList.innerHTML += `
+            <div class="flex justify-between">
+              <span>${c.itemName} x${c.qty}</span>
+              <span>Rp ${(c.price * c.qty).toLocaleString('id-ID')}</span>
+            </div>
+          `;
+        });
+
+        document.getElementById('invTotalAmount').innerText = `Rp ${grandTotal.toLocaleString('id-ID')}`;
+        document.getElementById('invCashPaid').innerText = `Rp ${cash.toLocaleString('id-ID')}`;
+        document.getElementById('invChange').innerText = `Rp ${(cash - grandTotal).toLocaleString('id-ID')}`;
+
+        this.openModal('modalInvoicePreview');
+        this.clearCart();
+        this.renderAllViews();
+        window.customAlert('Transaksi berhasil disimpan!');
+      },
+      printInvoiceNow() {
+        const printContent = document.getElementById('printable-invoice').innerHTML;
+        const originalContent = document.body.innerHTML;
+        document.body.innerHTML = `<div style="padding:20px;max-width:300px;margin:auto;">${printContent}</div>`;
+        window.print();
+        document.body.innerHTML = originalContent;
+        window.location.reload(); 
+      },
+
+      renderStockCardLedger() {
+        const select = document.getElementById('stockCardItemSelect');
+        if (!select) return;
+
+        if (select.options.length <= 1) {
+          select.innerHTML = '<option value="">-- Pilih Barang Ledger --</option>';
+          state.items.forEach(item => {
+            select.innerHTML += `<option value="${item.name}">${item.name}</option>`;
+          });
+        }
+
+        const itemName = select.value;
+        const tbody = document.getElementById('stockCardLedgerBody');
+        if (!itemName) { tbody.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-slate-500 italic">Pilih barang untuk melihat kartu stok</td></tr>`; return; }
+
+        const item = state.items.find(i => i.name === itemName);
+        document.getElementById('stockCardTitle').innerText = itemName;
+        document.getElementById('stockCardSubtitle').innerText = `SKU: ${item?.sku || '-'} | Kategori: ${item?.category || '-'}`;
+
+        let ledger = [];
+        if (item?.initialStock > 0) {
+          ledger.push({ date: '2020-01-01', type: 'INIT', desc: 'Stok Awal (Opname)', in: Number(item.initialStock), out: 0 });
+        }
+
+        state.purchases.filter(p => p.itemName === itemName).forEach(p => {
+          ledger.push({ date: p.date, type: 'IN', desc: `Pembelian (Supplier: ${p.supplier || '-'})`, in: Number(p.qty), out: 0 });
+        });
+
+        state.sales.filter(s => s.itemName === itemName).forEach(s => {
+          ledger.push({ date: s.date, type: 'OUT', desc: 'Penjualan (Kasir POS)', in: 0, out: Number(s.qty) });
+        });
+
+        ledger.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+        let balance = 0;
+        let totIn = 0; let totOut = 0;
+        tbody.innerHTML = '';
+
+        ledger.forEach(l => {
+          balance += l.in; balance -= l.out;
+          totIn += l.in; totOut += l.out;
+          const tr = document.createElement('tr');
+          tr.className = "hover:bg-slate-800/40 transition";
+          tr.innerHTML = `
+            <td class="px-4 py-2.5 font-mono text-slate-400">${l.type === 'INIT' ? '-' : l.date}</td>
+            <td class="px-4 py-2.5 text-slate-200">${l.desc}</td>
+            <td class="px-4 py-2.5 text-center text-emerald-400 font-bold">${l.in > 0 ? `+${l.in}` : '-'}</td>
+            <td class="px-4 py-2.5 text-center text-rose-400 font-bold">${l.out > 0 ? `-${l.out}` : '-'}</td>
+            <td class="px-4 py-2.5 text-center text-brand-400 font-bold bg-brand-500/5">${balance}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+        document.getElementById('stockCardTotalIn').innerText = totIn;
+        document.getElementById('stockCardTotalOut').innerText = totOut;
+        document.getElementById('stockCardCurrentBalance').innerText = balance;
+      },
+
       renderMonthlyReport() {
         const month = document.getElementById('reportMonth')?.value || '10';
         const year = document.getElementById('reportYear')?.value || '2026';
+        
+        const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+        document.getElementById('reportPeriodText').innerText = `Periode: ${monthNames[parseInt(month)-1]} ${year}`;
+        document.getElementById('reportDateStamp').innerText = `Dicetak: ${new Date().toLocaleString('id-ID')}`;
 
-        document.getElementById('reportDateStamp').innerText = `Tanggal Cetak: ${new Date().toLocaleDateString('id-ID')}`;
-        document.getElementById('reportPeriodText').innerText = `Periode: Bulan ${month} - ${year}`;
+        let totalPur = 0;
+        let totalSal = 0;
+        let totalProf = 0;
+        
+        const reportData = {};
+
+        state.items.forEach(i => {
+          reportData[i.name] = { name: i.name, inQty: 0, inCost: 0, outQty: 0, outRev: 0, balance: this.calculateRealtimeStock(i.name) };
+        });
+
+        state.purchases.forEach(p => {
+          if (p.date.startsWith(`${year}-${month.padStart(2, '0')}`)) {
+            const cost = p.price * p.qty;
+            totalPur += cost;
+            if (reportData[p.itemName]) {
+              reportData[p.itemName].inQty += p.qty;
+              reportData[p.itemName].inCost += cost;
+            }
+          }
+        });
+
+        state.sales.forEach(s => {
+          if (s.date.startsWith(`${year}-${month.padStart(2, '0')}`)) {
+            const rev = s.price * s.qty;
+            totalSal += rev;
+            if (reportData[s.itemName]) {
+              reportData[s.itemName].outQty += s.qty;
+              reportData[s.itemName].outRev += rev;
+              
+              const itemMaster = state.items.find(i => i.name === s.itemName);
+              const buyPrice = itemMaster ? (itemMaster.buyPrice || 0) : 0;
+              totalProf += (s.price - buyPrice) * s.qty;
+            }
+          }
+        });
+
+        document.getElementById('reportSumPurchases').innerText = `Rp ${totalPur.toLocaleString('id-ID')}`;
+        document.getElementById('reportSumSales').innerText = `Rp ${totalSal.toLocaleString('id-ID')}`;
+        document.getElementById('reportSumProfit').innerText = `Rp ${totalProf.toLocaleString('id-ID')}`;
 
         const tbody = document.getElementById('reportMonthlyTableBody');
         if (!tbody) return;
-
         tbody.innerHTML = '';
-        let totalBuyVal = 0;
-        let totalSellVal = 0;
 
-        state.items.forEach((item, idx) => {
-          const itemPurchases = state.purchases.filter(p => p.itemName === item.name);
-          const itemSales = state.sales.filter(s => s.itemName === item.name);
-
-          const totalBuyQty = itemPurchases.reduce((a, b) => a + Number(b.qty), 0);
-          const totalBuyCost = itemPurchases.reduce((a, b) => a + (Number(b.price) * Number(b.qty)), 0);
-
-          const totalSellQty = itemSales.reduce((a, b) => a + Number(b.qty), 0);
-          const totalSellRevenue = itemSales.reduce((a, b) => a + (Number(b.price) * Number(b.qty)), 0);
-
-          totalBuyVal += totalBuyCost;
-          totalSellVal += totalSellRevenue;
-
-          const remainingStock = this.calculateRealtimeStock(item.name);
-
-          const tr = document.createElement('tr');
-          tr.className = "hover:bg-slate-800/40 print:border-b";
-          tr.innerHTML = `
-            <td class="px-3 py-2 text-slate-400">${idx + 1}</td>
-            <td class="px-3 py-2 font-semibold text-slate-100 print:text-black">${item.name}</td>
-            <td class="px-3 py-2 text-center text-emerald-400 print:text-black">${totalBuyQty}</td>
-            <td class="px-3 py-2 text-right font-mono">Rp ${totalBuyCost.toLocaleString('id-ID')}</td>
-            <td class="px-3 py-2 text-center text-brand-400 print:text-black">${totalSellQty}</td>
-            <td class="px-3 py-2 text-right font-mono">Rp ${totalSellRevenue.toLocaleString('id-ID')}</td>
-            <td class="px-3 py-2 text-center font-bold">${remainingStock}</td>
-          `;
-          tbody.appendChild(tr);
-        });
-
-        document.getElementById('reportSumPurchases').innerText = `Rp ${totalBuyVal.toLocaleString('id-ID')}`;
-        document.getElementById('reportSumSales').innerText = `Rp ${totalSellVal.toLocaleString('id-ID')}`;
-        document.getElementById('reportSumProfit').innerText = `Rp ${(totalSellVal - totalBuyVal).toLocaleString('id-ID')}`;
+        let no = 1;
+        for (const key in reportData) {
+          const r = reportData[key];
+          if (r.inQty > 0 || r.outQty > 0 || r.balance > 0) {
+            tbody.innerHTML += `
+              <tr class="hover:bg-slate-800/20 print:hover:bg-transparent">
+                <td class="px-3 py-2.5 text-slate-500 print:text-black">${no++}</td>
+                <td class="px-3 py-2.5 font-semibold text-slate-200 print:text-black">${r.name}</td>
+                <td class="px-3 py-2.5 text-center text-emerald-400 print:text-black">${r.inQty}</td>
+                <td class="px-3 py-2.5 text-right font-mono text-slate-300 print:text-black">Rp ${r.inCost.toLocaleString('id-ID')}</td>
+                <td class="px-3 py-2.5 text-center text-rose-400 print:text-black">${r.outQty}</td>
+                <td class="px-3 py-2.5 text-right font-mono text-slate-300 print:text-black">Rp ${r.outRev.toLocaleString('id-ID')}</td>
+                <td class="px-3 py-2.5 text-center font-bold text-brand-400 print:text-black">${r.balance}</td>
+              </tr>
+            `;
+          }
+        }
       },
-      printMonthlyReport() {
-        window.print();
+      printMonthlyReport() { window.print(); },
+
+      exportAllDataJSON() {
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
+        const downloadAnchorNode = document.createElement('a');
+        downloadAnchorNode.setAttribute("href",     dataStr);
+        downloadAnchorNode.setAttribute("download", `CDanShop_Backup_${new Date().toISOString().split('T')[0]}.json`);
+        document.body.appendChild(downloadAnchorNode); 
+        downloadAnchorNode.click();
+        downloadAnchorNode.remove();
+        window.customAlert('Backup Database Berhasil Diunduh!');
       },
       refreshDashboardData() {
         this.renderAllViews();
-        window.customAlert('Data dashboard berhasil direfresh!');
-      },
-      exportAllDataJSON() {
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state, null, 2));
-        const dlAnchorElem = document.createElement('a');
-        dlAnchorElem.setAttribute("href", dataStr);
-        dlAnchorElem.setAttribute("download", `backup_c_dan_shop_${new Date().toISOString().split('T')[0]}.json`);
-        dlAnchorElem.click();
+        window.customAlert('Data dashboard dimuat ulang.');
       }
     };
 
-    document.addEventListener('DOMContentLoaded', () => {
-      initFirebase();
+    // Clock
+    setInterval(() => {
+      const now = new Date();
+      document.getElementById('currentClock').innerText = now.toLocaleTimeString('id-ID', { hour12: false });
+    }, 1000);
+
+    window.onload = async () => {
       purchaseGrid.init();
-      app.navigate('dashboard');
-      
-      setInterval(() => {
-        const now = new Date();
-        const clockEl = document.getElementById('currentClock');
-        if (clockEl) clockEl.innerText = now.toTimeString().split(' ')[0];
-      }, 1000);
-    });
+      app.renderAllViews();
+      await initFirebase();
+    };
   </script>
 </body>
 </html>
