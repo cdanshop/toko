@@ -46,8 +46,35 @@
   <!-- Toast Notification Container -->
   <div id="toastContainer" class="fixed top-4 right-4 z-[9999] flex flex-col gap-2 pointer-events-none"></div>
 
-  <!-- App Wrapper -->
-  <div class="flex h-screen overflow-hidden">
+  <!-- Login Screen -->
+  <div id="loginScreen" class="fixed inset-0 bg-slate-950 z-[9999] flex flex-col items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-3xl p-8 shadow-2xl">
+      <div class="text-center mb-8">
+        <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-brand-600 to-cyan-400 flex items-center justify-center shadow-lg shadow-brand-600/30 mx-auto mb-4">
+          <i class="fa-solid fa-store text-white text-2xl"></i>
+        </div>
+        <h1 class="text-2xl font-bold text-slate-100">C'DAN SHOP</h1>
+        <p class="text-sm text-slate-400">Silakan masuk untuk melanjutkan</p>
+      </div>
+      
+      <div class="space-y-4">
+        <div>
+          <label class="block text-xs font-medium text-slate-400 mb-1.5">Email Akses</label>
+          <input type="email" id="loginEmail" placeholder="admin@cdanshop.com" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-200 focus:outline-none focus:border-brand-500">
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-slate-400 mb-1.5">Password</label>
+          <input type="password" id="loginPassword" placeholder="••••••••" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-200 focus:outline-none focus:border-brand-500">
+        </div>
+        <button onclick="app.loginAuth()" class="w-full py-3 mt-4 bg-brand-600 hover:bg-brand-500 text-white rounded-xl text-sm font-bold shadow-lg shadow-brand-600/20 transition">
+          LOG IN
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- App Wrapper (Disembunyikan secara default) -->
+  <div id="appWrapper" class="flex h-screen overflow-hidden hidden">
 
     <!-- SIDEBAR -->
     <aside id="sidebar" class="absolute md:relative h-full w-64 bg-slate-900 border-r border-slate-800 flex flex-col transition-transform duration-300 z-50 -translate-x-full md:translate-x-0">
@@ -60,7 +87,6 @@
           <h1 class="font-bold text-base tracking-wide text-slate-100">C'DAN SHOP</h1>
           <p class="text-[15px] text-slate-400 font-medium">PURBALINGGA</p>
         </div>
-        <!-- Tombol Tutup Khusus Mobile -->
         <button onclick="document.getElementById('sidebar').classList.add('-translate-x-full')" class="md:hidden ml-auto text-slate-400 hover:text-slate-100">
           <i class="fa-solid fa-xmark text-lg"></i>
         </button>
@@ -75,9 +101,6 @@
         </button>
         <button onclick="app.navigate('penjualan')" data-tab="penjualan" class="nav-btn w-full flex items-center px-3 py-2.5 text-xs font-medium rounded-xl transition-all gap-3 text-slate-400 hover:text-slate-100 hover:bg-slate-800/60">
           <i class="fa-solid fa-cash-register w-5 text-center"></i> Kasir POS Penjualan
-        </button>
-        <button onclick="app.navigate('database-penjualan')" data-tab="database-penjualan" class="nav-btn w-full flex items-center px-3 py-2.5 text-xs font-medium rounded-xl transition-all gap-3 text-slate-400 hover:text-slate-100 hover:bg-slate-800/60">
-          <i class="fa-solid fa-receipt w-5 text-center"></i> Database Penjualan
         </button>
 
         <p class="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-300 mt-6 mb-2">Manajemen Barang</p>
@@ -122,7 +145,6 @@
       <!-- TOP HEADER -->
       <header class="h-16 bg-slate-900 border-b border-slate-800 flex items-center justify-between px-4 md:px-6 z-10 w-full">
         <div class="flex items-center gap-3 md:gap-4">
-          <!-- Tombol Menu Khusus Mobile -->
           <button onclick="document.getElementById('sidebar').classList.remove('-translate-x-full')" class="md:hidden text-slate-300 hover:text-white p-1">
             <i class="fa-solid fa-bars text-xl"></i>
           </button>
@@ -139,6 +161,9 @@
           </button>
           <button onclick="app.exportAllDataJSON()" class="px-2 md:px-3 py-1.5 bg-brand-600 hover:bg-brand-500 text-white rounded-xl text-[11px] md:text-xs font-semibold shadow-md shadow-brand-600/20 transition flex items-center gap-2">
             <i class="fa-solid fa-cloud-arrow-down"></i> <span class="hidden md:inline">Backup</span>
+          </button>
+          <button onclick="app.logoutAuth()" class="px-2 md:px-3 py-1.5 bg-rose-600 hover:bg-rose-500 text-white rounded-xl text-[11px] md:text-xs font-semibold shadow-md shadow-rose-600/20 transition flex items-center gap-2">
+            <i class="fa-solid fa-power-off"></i> <span class="hidden md:inline">Keluar</span>
           </button>
         </div>
       </header>
@@ -212,7 +237,6 @@
           </div>
 
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <!-- Left: Add items to cart -->
             <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-4">
               <h3 class="text-sm font-bold text-slate-200 border-b border-slate-800 pb-3">Pilih Barang Jual</h3>
               
@@ -249,7 +273,6 @@
               </button>
             </div>
 
-            <!-- Right: Cart & Checkout Summary -->
             <div class="lg:col-span-2 bg-slate-900 border border-slate-800 p-5 rounded-2xl flex flex-col justify-between space-y-4">
               <div>
                 <div class="flex justify-between items-center border-b border-slate-800 pb-3 mb-3">
@@ -275,7 +298,6 @@
                 </div>
               </div>
 
-              <!-- Payment Summary Box -->
               <div class="bg-slate-800/60 p-4 rounded-xl border border-slate-700/80 space-y-3">
                 <div class="flex justify-between items-center text-base">
                   <span class="font-bold text-slate-300">Total Tagihan:</span>
@@ -306,86 +328,6 @@
           </div>
         </div>
 
-        <!-- TAB BARU: DATABASE PENJUALAN -->
-        <div id="tab-database-penjualan" class="tab-content hidden space-y-6">
-          <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
-            <div>
-              <h2 class="text-xl font-bold text-slate-100">Database & Rekapitulasi Penjualan</h2>
-              <p class="text-xs text-slate-400">Rekapitulasi transaksi penjualan semua kategori secara rinci dengan fitur edit & hapus record.</p>
-            </div>
-          </div>
-
-          <!-- Summary Metric Badges -->
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-            <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl flex items-center gap-4">
-              <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center text-lg">
-                <i class="fa-solid fa-money-bill-wave"></i>
-              </div>
-              <div>
-                <p class="text-xs text-slate-400">Total Omset Rekap</p>
-                <h4 id="salesSumTotal" class="text-base font-bold text-emerald-400 font-mono mt-0.5">Rp 0</h4>
-              </div>
-            </div>
-            <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl flex items-center gap-4">
-              <div class="w-10 h-10 rounded-xl bg-brand-500/10 text-brand-400 border border-brand-500/20 flex items-center justify-center text-lg">
-                <i class="fa-solid fa-boxes-packing"></i>
-              </div>
-              <div>
-                <p class="text-xs text-slate-400">Total Item Terjual</p>
-                <h4 id="salesSumQty" class="text-base font-bold text-brand-400 font-mono mt-0.5">0 Pcs</h4>
-              </div>
-            </div>
-            <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl flex items-center gap-4">
-              <div class="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-400 border border-purple-500/20 flex items-center justify-center text-lg">
-                <i class="fa-solid fa-receipt"></i>
-              </div>
-              <div>
-                <p class="text-xs text-slate-400">Total Record Transaksi</p>
-                <h4 id="salesSumCount" class="text-base font-bold text-purple-400 font-mono mt-0.5">0 Transaksi</h4>
-              </div>
-            </div>
-          </div>
-
-          <!-- Filters bar -->
-          <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between">
-            <div class="flex-1 min-w-[240px]">
-              <input type="text" id="salesSearchInput" oninput="app.renderSalesTable()" placeholder="Cari barang atau tanggal..." class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-200">
-            </div>
-            <div class="flex items-center gap-2">
-              <select id="salesFilterCategory" onchange="app.renderSalesTable()" class="w-full md:w-auto bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-200">
-                <option value="ALL">Semua Kategori Barang</option>
-                <option value="Sembako">Sembako</option>
-                <option value="Minuman">Minuman</option>
-                <option value="Makanan">Makanan</option>
-                <option value="Pakaian">Pakaian</option>
-                <option value="Tas">Tas</option>
-              </select>
-            </div>
-          </div>
-
-          <!-- Sales Table -->
-          <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
-            <div class="overflow-x-auto scrollbar-thin scrollbar-thumb-slate-800">
-              <table class="w-full text-left text-xs min-w-[750px]">
-                <thead class="bg-slate-800/80 text-slate-400 border-b border-slate-800">
-                  <tr>
-                    <th class="px-4 py-3">Tanggal</th>
-                    <th class="px-4 py-3">Nama Barang</th>
-                    <th class="px-4 py-3">Kategori</th>
-                    <th class="px-4 py-3 text-right">Harga Jual Satuan</th>
-                    <th class="px-4 py-3 text-center">Qty Terjual</th>
-                    <th class="px-4 py-3 text-right">Total Omset</th>
-                    <th class="px-4 py-3 text-center">Aksi</th>
-                  </tr>
-                </thead>
-                <tbody id="salesTableBody" class="divide-y divide-slate-800/60">
-                  <!-- Rendered dynamically -->
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
         <!-- TAB 3: MASTER STOK BARANG -->
         <div id="tab-database-barang" class="tab-content hidden space-y-6">
           <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
@@ -398,7 +340,6 @@
             </button>
           </div>
 
-          <!-- Filters bar -->
           <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between">
             <div class="flex-1 min-w-[240px]">
               <input type="text" id="itemSearchInput" oninput="app.renderMasterItemsTable()" placeholder="Cari nama barang atau SKU..." class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-200">
@@ -415,7 +356,6 @@
             </div>
           </div>
 
-          <!-- Items Table -->
           <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
             <div class="overflow-x-auto scrollbar-thin scrollbar-thumb-slate-800">
               <table class="w-full text-left text-xs min-w-[700px]">
@@ -432,7 +372,6 @@
                   </tr>
                 </thead>
                 <tbody id="masterItemsTableBody" class="divide-y divide-slate-800/60">
-                  <!-- Rendered dynamically -->
                 </tbody>
               </table>
             </div>
@@ -444,14 +383,13 @@
           <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
             <div>
               <h2 class="text-xl font-bold text-slate-100">Input Pembelian Massal</h2>
-              <p class="text-xs text-slate-400">Catat restock pembelian barang secara cepat dalam bentuk tabel grid interaktif terintegrasi Master Stok.</p>
+              <p class="text-xs text-slate-400">Catat restock pembelian barang secara cepat dalam bentuk tabel grid interaktif.</p>
             </div>
             <button onclick="purchaseGrid.saveAll()" class="w-full md:w-auto px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold shadow-md shadow-emerald-600/20 transition flex items-center justify-center gap-2">
               <i class="fa-solid fa-floppy-disk"></i> Simpan Pembelian
             </button>
           </div>
 
-          <!-- Grid Meta Toolbar -->
           <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between">
             <div class="flex flex-col md:flex-row items-stretch md:items-center gap-3">
               <div>
@@ -473,7 +411,6 @@
             </div>
           </div>
 
-          <!-- Grid Table -->
           <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
             <div class="overflow-x-auto max-h-[420px] scrollbar-thin scrollbar-thumb-slate-800">
               <table class="w-full text-left text-xs min-w-[850px]">
@@ -481,7 +418,7 @@
                   <tr>
                     <th class="px-3 py-2 text-center w-12">No</th>
                     <th class="px-3 py-2 w-36">Tanggal</th>
-                    <th class="px-3 py-2">Nama Barang (Pilih Master / Ketik)</th>
+                    <th class="px-3 py-2">Nama Barang</th>
                     <th class="px-3 py-2 text-right w-36">Harga Modal (Rp)</th>
                     <th class="px-3 py-2 text-center w-24">Qty</th>
                     <th class="px-3 py-2 w-40">Supplier</th>
@@ -490,7 +427,6 @@
                   </tr>
                 </thead>
                 <tbody id="purchaseGridBody" class="divide-y divide-slate-800">
-                  <!-- Dynamic excel grid rows with integrated dropdown -->
                 </tbody>
               </table>
             </div>
@@ -500,7 +436,6 @@
             </div>
           </div>
 
-          <!-- History Table Section -->
           <div class="pt-4">
             <h3 class="text-sm font-bold text-slate-200 mb-3">Riwayat Database Pembelian Tercatat</h3>
             <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
@@ -521,7 +456,6 @@
                     </tr>
                   </thead>
                   <tbody id="purchasesTableBody" class="divide-y divide-slate-800">
-                    <!-- Rendered purchases history -->
                   </tbody>
                 </table>
               </div>
@@ -553,7 +487,6 @@
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="priceTrendList">
-            <!-- Rendered dynamically -->
           </div>
         </div>
 
@@ -566,7 +499,6 @@
             </div>
             <div class="w-full md:w-auto">
               <select id="stockCardItemSelect" onchange="app.renderStockCardLedger()" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200">
-                <!-- Options populated dynamically -->
               </select>
             </div>
           </div>
@@ -596,7 +528,6 @@
                   </tr>
                 </thead>
                 <tbody id="stockCardLedgerBody" class="divide-y divide-slate-800">
-                  <!-- Ledger rows -->
                 </tbody>
               </table>
             </div>
@@ -625,7 +556,6 @@
             </div>
           </div>
 
-          <!-- Printable Report Sheet -->
           <div id="printable-area" class="bg-slate-900 border border-slate-800 rounded-2xl p-4 md:p-6 space-y-6 print:bg-white print:text-black print:border-none print:shadow-none">
             <div class="flex justify-between items-start border-b border-slate-800 pb-4 print:border-slate-300">
               <div>
@@ -637,7 +567,6 @@
               </div>
             </div>
 
-            <!-- Report Summary Cards -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
               <div class="bg-slate-800/60 p-4 rounded-xl border border-slate-700/60 print:border-slate-300 print:bg-slate-100">
                 <p class="text-xs text-slate-400 print:text-slate-600">Total Pembelian Bulanan</p>
@@ -653,7 +582,6 @@
               </div>
             </div>
 
-            <!-- Report Table -->
             <div class="overflow-x-auto scrollbar-thin scrollbar-thumb-slate-800">
               <table class="w-full text-left text-xs min-w-[700px]">
                 <thead class="bg-slate-800/80 text-slate-400 print:bg-slate-200 print:text-black">
@@ -668,7 +596,6 @@
                   </tr>
                 </thead>
                 <tbody id="reportMonthlyTableBody" class="divide-y divide-slate-800 print:divide-slate-300">
-                  <!-- Rendered monthly report items -->
                 </tbody>
               </table>
             </div>
@@ -677,16 +604,15 @@
 
       </main>
     </div>
-  </div>
+  </div> <!-- Penutup dari appWrapper -->
 
   <!-- WATERMARK -->
   <div class="fixed bottom-3 left-1/2 -translate-x-1/2 pointer-events-none z-50 print:hidden opacity-40 hover:opacity-100 transition-opacity">
-    <span class="text-[15px] text-slate-500 font-medium tracking-widest font-mono select-none">Copyright©TOMOSJR 2026</span>
+      <span class="text-[15px] text-slate-500 font-medium tracking-widest font-mono select-none">Copyright©TOMOSJR 2026</span>
   </div>
 
   <!-- MODALS AREA -->
 
-  <!-- Custom Confirm Modal -->
   <div id="modalCustomConfirm" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
     <div class="bg-slate-900 border border-slate-800 w-full max-w-sm rounded-2xl p-6 text-center space-y-4">
       <div class="w-12 h-12 rounded-full bg-rose-500/20 text-rose-500 mx-auto flex items-center justify-center text-xl">
@@ -700,7 +626,6 @@
     </div>
   </div>
 
-  <!-- Store Profile Modal -->
   <div id="modalStoreProfile" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
     <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-2xl p-6 space-y-4">
       <h3 class="text-base font-bold text-slate-100">Pengaturan Profil Toko</h3>
@@ -725,7 +650,6 @@
     </div>
   </div>
 
-  <!-- Master Item Modal -->
   <div id="modalMasterItem" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
     <div class="bg-slate-900 border border-slate-800 w-full max-w-lg rounded-2xl p-6 space-y-4">
       <h3 id="modalItemTitle" class="text-base font-bold text-slate-100">Tambah Barang Master</h3>
@@ -773,7 +697,6 @@
     </div>
   </div>
 
-  <!-- Edit Purchase Modal -->
   <div id="modalEditPurchase" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
     <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-2xl p-6 space-y-4">
       <h3 class="text-base font-bold text-slate-100">Edit / Hapus Record Pembelian</h3>
@@ -812,44 +735,6 @@
     </div>
   </div>
 
-  <!-- MODAL EDIT PENJUALAN (FITUR BARU) -->
-  <div id="modalEditSale" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-2xl p-6 space-y-4">
-      <h3 class="text-base font-bold text-slate-100">Edit / Hapus Record Penjualan</h3>
-      <input type="hidden" id="editSaleId">
-      <div class="space-y-3 text-xs">
-        <div>
-          <label class="block text-slate-400 mb-1">Tanggal Penjualan</label>
-          <input type="date" id="editSaleDate" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-slate-200">
-        </div>
-        <div>
-          <label class="block text-slate-400 mb-1">Nama Barang</label>
-          <select id="editSaleItemSelect" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-slate-200">
-            <!-- Dynamic master item options -->
-          </select>
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="block text-slate-400 mb-1">Harga Jual (Rp)</label>
-            <input type="number" id="editSalePrice" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-slate-200 font-mono">
-          </div>
-          <div>
-            <label class="block text-slate-400 mb-1">Jumlah (Qty)</label>
-            <input type="number" id="editSaleQty" min="1" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-slate-200 font-mono">
-          </div>
-        </div>
-      </div>
-      <div class="flex justify-between pt-2">
-        <button onclick="app.deleteSaleRecord()" class="px-4 py-2 bg-rose-500/20 text-rose-400 hover:bg-rose-500/30 rounded-xl text-xs font-semibold">Hapus Record</button>
-        <div class="flex gap-2">
-          <button onclick="app.closeModal('modalEditSale')" class="px-4 py-2 bg-slate-800 text-slate-300 rounded-xl text-xs">Batal</button>
-          <button onclick="app.saveEditedSale()" class="px-4 py-2 bg-brand-600 text-white rounded-xl text-xs font-semibold">Simpan Perubahan</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Invoice Preview Modal -->
   <div id="modalInvoicePreview" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
     <div class="bg-slate-900 border border-slate-800 w-full max-w-sm rounded-2xl p-6 space-y-4 text-xs">
       <div id="printable-invoice" class="space-y-3 bg-white text-slate-900 p-4 rounded-xl font-mono">
@@ -862,7 +747,6 @@
           <span id="invDate">2026-10-05</span>
         </div>
         <div id="invItemsList" class="space-y-1.5 border-b border-dashed border-slate-300 pb-3 text-[11px]">
-          <!-- Items -->
         </div>
         <div class="space-y-1 pt-1">
           <div class="flex justify-between font-bold">
@@ -892,13 +776,13 @@
   <!-- FIREBASE & MAIN SCRIPT INTEGRATION -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
     import { getFirestore, collection, onSnapshot, doc, setDoc, addDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
     window.customAlert = function(msg, type = 'info') {
       const container = document.getElementById('toastContainer');
       const toast = document.createElement('div');
-      const bg = type === 'error' ? 'bg-rose-600' : 'bg-emerald-600';
+      const bg = type === 'error' ? 'bg-rose-600' : (type === 'success' ? 'bg-emerald-600' : 'bg-brand-600');
       const icon = type === 'error' ? 'fa-circle-exclamation' : 'fa-circle-check';
       
       toast.className = `${bg} text-white px-4 py-3 rounded-xl shadow-lg shadow-black/50 text-xs font-semibold transform transition-all duration-300 translate-x-[120%] flex items-center gap-2`;
@@ -931,7 +815,6 @@
       messagingSenderId: "990568874182",
       appId: "1:990568874182:web:38efd597e5a34f12f517c7"
     };
-    const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
     let db = null;
     let auth = null;
@@ -939,25 +822,14 @@
     const defaultData = {
       items: [
         { id: 'item_1', sku: 'BRG-001', name: 'Beras Premium 5kg', category: 'Sembako', buyPrice: 68000, sellPrice: 75000, initialStock: 50, minStock: 10 },
-        { id: 'item_2', sku: 'BRG-002', name: 'Minyak Goreng 2L', category: 'Sembako', buyPrice: 32000, sellPrice: 36000, initialStock: 40, minStock: 8 },
-        { id: 'item_3', sku: 'BRG-003', name: 'Gula Pasir 1kg', category: 'Sembako', buyPrice: 15000, sellPrice: 17500, initialStock: 30, minStock: 5 },
-        { id: 'item_4', sku: 'BRG-004', name: 'Kopi Susu Pack', category: 'Minuman', buyPrice: 12000, sellPrice: 15000, initialStock: 25, minStock: 5 },
-        { id: 'item_5', sku: 'BRG-005', name: 'Susu UHT 1L', category: 'Minuman', buyPrice: 16000, sellPrice: 19500, initialStock: 15, minStock: 5 }
+        { id: 'item_2', sku: 'BRG-002', name: 'Minyak Goreng 2L', category: 'Sembako', buyPrice: 32000, sellPrice: 36000, initialStock: 40, minStock: 8 }
       ],
-      purchases: [
-        { id: 'pur_1', date: '2026-10-01', itemName: 'Beras Premium 5kg', price: 68000, qty: 20, supplier: 'PT Distribusi Sembako' },
-        { id: 'pur_2', date: '2026-10-02', itemName: 'Minyak Goreng 2L', price: 32000, qty: 15, supplier: 'CV Agro Mandiri' },
-        { id: 'pur_3', date: '2026-10-03', itemName: 'Gula Pasir 1kg', price: 15000, qty: 30, supplier: 'PT Distribusi Sembako' }
-      ],
-      sales: [
-        { id: 'sal_1', date: '2026-10-02', itemName: 'Beras Premium 5kg', price: 75000, qty: 2 },
-        { id: 'sal_2', date: '2026-10-03', itemName: 'Minyak Goreng 2L', price: 36000, qty: 3 },
-        { id: 'sal_3', date: '2026-10-04', itemName: 'Kopi Susu Pack', price: 15000, qty: 5 }
-      ],
+      purchases: [],
+      sales: [],
       store: {
         name: 'C\'DAN SHOP',
-        address: 'PURBALINGGA',
-        phone: '0812-0000-0000'
+        address: 'Jl. Jenderal Sudirman No. 45, Purwokerto',
+        phone: '0812-3456-7890'
       }
     };
 
@@ -980,36 +852,49 @@
         db = getFirestore(firebaseAppInstance);
         auth = getAuth(firebaseAppInstance);
 
-        if (initialAuthToken) await signInWithCustomToken(auth, initialAuthToken);
-        else await signInAnonymously(auth);
+        // Pantau Status Login
+        onAuthStateChanged(auth, (user) => {
+          if (user) {
+            // Sembunyikan layar login, tampilkan sistem utama
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('appWrapper').classList.remove('hidden');
+            window.customAlert('Berhasil masuk!', 'success');
 
-        onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'items'), (snapshot) => {
-          if (!snapshot.empty) {
-            const list = [];
-            snapshot.forEach(doc => list.push({ id: doc.id, ...doc.data() }));
-            state.items = list;
-            app.renderAllViews();
-          }
-        });
-        onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'purchases'), (snapshot) => {
-          if (!snapshot.empty) {
-            const list = [];
-            snapshot.forEach(doc => list.push({ id: doc.id, ...doc.data() }));
-            state.purchases = list;
-            app.renderAllViews();
-          }
-        });
-        onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'sales'), (snapshot) => {
-          if (!snapshot.empty) {
-            const list = [];
-            snapshot.forEach(doc => list.push({ id: doc.id, ...doc.data() }));
-            state.sales = list;
-            app.renderAllViews();
+            // Ambil data database jika login berhasil
+            onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'items'), (snapshot) => {
+              if (!snapshot.empty) {
+                const list = [];
+                snapshot.forEach(doc => list.push({ id: doc.id, ...doc.data() }));
+                state.items = list;
+                app.renderAllViews();
+              }
+            });
+            onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'purchases'), (snapshot) => {
+              if (!snapshot.empty) {
+                const list = [];
+                snapshot.forEach(doc => list.push({ id: doc.id, ...doc.data() }));
+                state.purchases = list;
+                app.renderAllViews();
+              }
+            });
+            onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'sales'), (snapshot) => {
+              if (!snapshot.empty) {
+                const list = [];
+                snapshot.forEach(doc => list.push({ id: doc.id, ...doc.data() }));
+                state.sales = list;
+                app.renderAllViews();
+              }
+            });
+          } else {
+            // Belum Login atau sudah Logout
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('appWrapper').classList.add('hidden');
           }
         });
 
       } catch (e) {
-        console.warn('Firebase fallback to local:', e);
+        console.warn('Firebase error:', e);
+        window.customAlert('Koneksi sistem gagal', 'error');
       }
     }
 
@@ -1036,23 +921,6 @@
         this.rows[index][field] = value;
         this.renderTotal();
       },
-      onSelectItem(index, selectedName) {
-        if (selectedName === 'CUSTOM_NEW') {
-          const customName = prompt("Masukkan nama barang baru:");
-          if (customName && customName.trim()) {
-            this.rows[index].itemName = customName.trim();
-          } else {
-            this.rows[index].itemName = '';
-          }
-        } else {
-          this.rows[index].itemName = selectedName;
-          const matchedItem = state.items.find(i => i.name === selectedName);
-          if (matchedItem && matchedItem.buyPrice) {
-            this.rows[index].price = matchedItem.buyPrice;
-          }
-        }
-        this.render();
-      },
       render() {
         const tbody = document.getElementById('purchaseGridBody');
         if (!tbody) return;
@@ -1063,33 +931,14 @@
           const subtotal = Number(r.price || 0) * Number(r.qty || 0);
           grandTotal += subtotal;
 
-          // Build master item dropdown options
-          let masterOptionsHtml = `<option value="">-- Pilih dari Master Stok --</option>`;
-          let isMatched = false;
-          state.items.forEach(item => {
-            const selected = (item.name === r.itemName) ? 'selected' : '';
-            if (item.name === r.itemName) isMatched = true;
-            masterOptionsHtml += `<option value="${item.name}" ${selected}>${item.name} (Modal: Rp ${Number(item.buyPrice||0).toLocaleString('id-ID')})</option>`;
-          });
-          masterOptionsHtml += `<option value="CUSTOM_NEW" ${(!isMatched && r.itemName) ? 'selected' : ''}>+ Ketik Manual / Barang Baru...</option>`;
-
           const tr = document.createElement('tr');
           tr.className = "hover:bg-slate-800/40";
           tr.innerHTML = `
             <td class="px-3 py-2 text-center text-slate-500 font-mono">${idx + 1}</td>
             <td class="px-3 py-2"><input type="date" value="${r.date}" onchange="purchaseGrid.updateRow(${idx}, 'date', this.value)" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-xs text-slate-200"></td>
-            <td class="px-3 py-2">
-              <div class="space-y-1">
-                <select onchange="purchaseGrid.onSelectItem(${idx}, this.value)" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-xs text-slate-200 font-medium">
-                  ${masterOptionsHtml}
-                </select>
-                ${(!isMatched && r.itemName) ? `
-                  <input type="text" value="${r.itemName}" placeholder="Nama barang baru..." oninput="purchaseGrid.updateRow(${idx}, 'itemName', this.value)" class="w-full bg-slate-800/80 border border-slate-700 rounded px-2 py-1 text-xs text-brand-300 font-semibold">
-                ` : ''}
-              </div>
-            </td>
-            <td class="px-3 py-2"><input type="number" value="${r.price}" oninput="purchaseGrid.updateRow(${idx}, 'price', Number(this.value))" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-xs text-slate-200 text-right font-mono"></td>
-            <td class="px-3 py-2"><input type="number" min="1" value="${r.qty}" oninput="purchaseGrid.updateRow(${idx}, 'qty', Number(this.value))" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-xs text-slate-200 text-center font-bold"></td>
+            <td class="px-3 py-2"><input type="text" list="itemListOptions" value="${r.itemName}" placeholder="Nama Barang..." oninput="purchaseGrid.updateRow(${idx}, 'itemName', this.value)" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-xs text-slate-200"></td>
+            <td class="px-3 py-2"><input type="number" value="${r.price}" oninput="purchaseGrid.updateRow(${idx}, 'price', Number(this.value))" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-xs text-slate-200 text-right"></td>
+            <td class="px-3 py-2"><input type="number" min="1" value="${r.qty}" oninput="purchaseGrid.updateRow(${idx}, 'qty', Number(this.value))" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-xs text-slate-200 text-center"></td>
             <td class="px-3 py-2"><input type="text" value="${r.supplier}" placeholder="Supplier..." oninput="purchaseGrid.updateRow(${idx}, 'supplier', this.value)" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-xs text-slate-200"></td>
             <td class="px-3 py-2 text-right font-mono text-brand-400 font-bold">Rp ${subtotal.toLocaleString('id-ID')}</td>
             <td class="px-3 py-2 text-center"><button onclick="purchaseGrid.removeRow(${idx})" class="text-rose-400 hover:text-rose-300"><i class="fa-solid fa-trash"></i></button></td>
@@ -1121,7 +970,7 @@
             const existingItem = state.items.find(i => i.name.toLowerCase() === r.itemName.trim().toLowerCase());
             if (!existingItem) {
               const newItem = {
-                sku: `BRG-${Math.floor(100 + Math.random() * 900)}`, name: r.itemName.trim(), category: 'Sembako',
+                sku: `BRG-${Math.floor(100 + Math.random() * 900)}`, name: r.itemName.trim(), category: 'Lainnya',
                 buyPrice: Number(r.price), sellPrice: Math.round(Number(r.price) * 1.2), initialStock: 0, minStock: 5
               };
               state.items.push(newItem);
@@ -1143,6 +992,35 @@
     };
 
     window.app = {
+      // ==== FUNGSI LOGIN / LOGOUT ====
+      async loginAuth() {
+        const email = document.getElementById('loginEmail').value;
+        const pass = document.getElementById('loginPassword').value;
+        
+        if(!email || !pass) return window.customAlert('Email dan Password wajib diisi!', 'error');
+        
+        try {
+          await signInWithEmailAndPassword(auth, email, pass);
+          // Jika sukses, onAuthStateChanged di atas akan otomatis berjalan
+        } catch (error) {
+          console.error(error);
+          window.customAlert('Login gagal! Periksa email dan password Anda.', 'error');
+        }
+      },
+      
+      async logoutAuth() {
+        try {
+          await signOut(auth);
+          window.customAlert('Berhasil keluar.', 'success');
+          // Kosongkan inputan demi keamanan
+          document.getElementById('loginEmail').value = '';
+          document.getElementById('loginPassword').value = '';
+        } catch (error) {
+          window.customAlert('Gagal keluar sistem.', 'error');
+        }
+      },
+
+      // ==== FUNGSI SISTEM BAWAAN ====
       showStoreProfileModal() {
         document.getElementById('settingStoreName').value = state.store.name;
         document.getElementById('settingStoreAddress').value = state.store.address;
@@ -1177,7 +1055,6 @@
           }
         });
 
-        // Tutup sidebar otomatis di mobile setelah di klik
         const sidebar = document.getElementById('sidebar');
         if (sidebar && window.innerWidth < 768) {
           sidebar.classList.add('-translate-x-full');
@@ -1195,9 +1072,8 @@
       renderAllViews() {
         this.updateSidebarStats();
         if (state.currentTab === 'dashboard') this.renderDashboard();
-        if (state.currentTab === 'database-penjualan') this.renderSalesTable();
         if (state.currentTab === 'database-barang') this.renderMasterItemsTable();
-        if (state.currentTab === 'database-pembelian') { this.renderPurchasesTable(); purchaseGrid.render(); }
+        if (state.currentTab === 'database-pembelian') this.renderPurchasesTable();
         if (state.currentTab === 'tren-harga') this.renderPriceTrends();
         if (state.currentTab === 'penjualan') this.renderPosScreen();
         if (state.currentTab === 'kartu-stok') this.renderStockCardLedger();
@@ -1218,11 +1094,7 @@
           lowBadge.classList.add('hidden');
         }
       },
-      refreshDashboardData() {
-        this.renderAllViews();
-        window.customAlert('Data berhasil diperbarui!');
-      },
-
+      
       renderDashboard() {
         const totalPurchasesCost = state.purchases.reduce((sum, p) => sum + (Number(p.price) * Number(p.qty)), 0);
         const totalSalesRevenue = state.sales.reduce((sum, s) => sum + (Number(s.price) * Number(s.qty)), 0);
@@ -1291,111 +1163,6 @@
             responsive: true, maintainAspectRatio: false,
             plugins: { legend: { position: 'bottom', labels: { color: '#cbd5e1', font: { size: 10 } } } }
           }
-        });
-      },
-
-      renderSalesTable() {
-        const query = document.getElementById('salesSearchInput')?.value.toLowerCase() || '';
-        const cat = document.getElementById('salesFilterCategory')?.value || 'ALL';
-        const tbody = document.getElementById('salesTableBody');
-        if (!tbody) return;
-
-        tbody.innerHTML = '';
-        let totalRevenue = 0;
-        let totalQty = 0;
-
-        const filteredSales = state.sales.filter(s => {
-          const matchedItem = state.items.find(i => i.name.toLowerCase() === s.itemName.toLowerCase());
-          const itemCategory = matchedItem ? matchedItem.category : 'Lainnya';
-          
-          const matchQuery = s.itemName.toLowerCase().includes(query) || (s.date && s.date.includes(query));
-          const matchCat = (cat === 'ALL') || (itemCategory === cat);
-          return matchQuery && matchCat;
-        });
-
-        filteredSales.forEach(s => {
-          const matchedItem = state.items.find(i => i.name.toLowerCase() === s.itemName.toLowerCase());
-          const category = matchedItem ? matchedItem.category : 'Lainnya';
-          const lineTotal = Number(s.price || 0) * Number(s.qty || 0);
-
-          totalRevenue += lineTotal;
-          totalQty += Number(s.qty || 0);
-
-          const tr = document.createElement('tr');
-          tr.className = "hover:bg-slate-800/50 transition";
-          tr.innerHTML = `
-            <td class="px-4 py-3 font-mono text-slate-400">${s.date || '-'}</td>
-            <td class="px-4 py-3 font-semibold text-slate-100">${s.itemName}</td>
-            <td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-[10px] bg-slate-800 border border-slate-700 text-slate-300">${category}</span></td>
-            <td class="px-4 py-3 text-right font-mono">Rp ${Number(s.price || 0).toLocaleString('id-ID')}</td>
-            <td class="px-4 py-3 text-center font-bold text-slate-200">${s.qty}</td>
-            <td class="px-4 py-3 text-right font-mono text-emerald-400 font-bold">Rp ${lineTotal.toLocaleString('id-ID')}</td>
-            <td class="px-4 py-3 text-center">
-              <button onclick="app.openEditSaleModal('${s.id}')" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-brand-300 rounded-lg border border-slate-700 text-xs transition">
-                <i class="fa-solid fa-edit mr-1"></i> Edit
-              </button>
-            </td>
-          `;
-          tbody.appendChild(tr);
-        });
-
-        document.getElementById('salesSumTotal').innerText = `Rp ${totalRevenue.toLocaleString('id-ID')}`;
-        document.getElementById('salesSumQty').innerText = `${totalQty} Pcs`;
-        document.getElementById('salesSumCount').innerText = `${filteredSales.length} Transaksi`;
-      },
-
-      openEditSaleModal(id) {
-        const sale = state.sales.find(s => s.id === id);
-        if (!sale) return;
-
-        document.getElementById('editSaleId').value = sale.id;
-        document.getElementById('editSaleDate').value = sale.date;
-        document.getElementById('editSalePrice').value = sale.price;
-        document.getElementById('editSaleQty').value = sale.qty;
-
-        const select = document.getElementById('editSaleItemSelect');
-        select.innerHTML = '';
-        state.items.forEach(item => {
-          const opt = document.createElement('option');
-          opt.value = item.name;
-          opt.innerText = item.name;
-          if (item.name === sale.itemName) opt.selected = true;
-          select.appendChild(opt);
-        });
-
-        this.openModal('modalEditSale');
-      },
-
-      async saveEditedSale() {
-        const id = document.getElementById('editSaleId').value;
-        const date = document.getElementById('editSaleDate').value;
-        const itemName = document.getElementById('editSaleItemSelect').value;
-        const price = Number(document.getElementById('editSalePrice').value);
-        const qty = Number(document.getElementById('editSaleQty').value);
-
-        if (!itemName || price <= 0 || qty <= 0) {
-          return window.customAlert('Mohon isi tanggal, barang, harga jual, dan jumlah dengan benar.', 'error');
-        }
-
-        const index = state.sales.findIndex(s => s.id === id);
-        if (index !== -1) {
-          state.sales[index] = { ...state.sales[index], date, itemName, price, qty };
-          if (db && id) await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'sales', id), { date, itemName, price, qty }, { merge: true });
-        }
-
-        this.closeModal('modalEditSale');
-        this.renderAllViews();
-        window.customAlert('Data record penjualan berhasil diperbarui!');
-      },
-
-      async deleteSaleRecord() {
-        const id = document.getElementById('editSaleId').value;
-        window.customConfirm('Yakin ingin menghapus record penjualan ini?', async () => {
-          state.sales = state.sales.filter(s => s.id !== id);
-          if (db && id) await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'sales', id));
-          app.closeModal('modalEditSale');
-          app.renderAllViews();
-          window.customAlert('Record penjualan berhasil dihapus.');
         });
       },
 
@@ -1617,12 +1384,20 @@
         const itemSelect = document.getElementById('posItemSelect');
         if (!itemSelect) return;
 
+        let dataListEl = document.getElementById('itemListOptions');
+        if (!dataListEl) {
+          dataListEl = document.createElement('datalist'); dataListEl.id = 'itemListOptions'; document.body.appendChild(dataListEl);
+        }
+        dataListEl.innerHTML = '';
+
         itemSelect.innerHTML = '<option value="">-- Pilih Barang --</option>';
         state.items.forEach(item => {
           const stock = this.calculateRealtimeStock(item.name);
           const opt = document.createElement('option');
           opt.value = item.name; opt.innerText = `${item.name} (Stok: ${stock})`;
           itemSelect.appendChild(opt);
+
+          const dlOpt = document.createElement('option'); dlOpt.value = item.name; dataListEl.appendChild(dlOpt);
         });
 
         document.getElementById('posSaleDate').value = new Date().toISOString().split('T')[0];
@@ -1729,48 +1504,37 @@
           changeEl.classList.remove('text-rose-400', 'text-emerald-400'); changeEl.classList.add('text-brand-400');
         }
       },
-
       async checkoutAndShowInvoice() {
-        if (state.cart.length === 0) return window.customAlert('Keranjang belanja masih kosong.', 'error');
+        if (state.cart.length === 0) return window.customAlert('Keranjang kosong!', 'error');
+        
         const grandTotal = state.cart.reduce((sum, c) => sum + (c.price * c.qty), 0);
         const cash = Number(document.getElementById('posCashInput').value || 0);
 
-        if (cash < grandTotal) {
-          return window.customAlert('Uang pembayaran tunai masih kurang!', 'error');
-        }
+        if (cash < grandTotal) return window.customAlert('Uang pembayaran kurang!', 'error');
 
-        const date = document.getElementById('posSaleDate').value || new Date().toISOString().split('T')[0];
-        const invoiceNo = 'INV-' + Math.floor(100000 + Math.random() * 900000);
-
-        // Save transactions to local state and Firestore
-        for (const cartItem of state.cart) {
-          const newSale = {
-            id: `sal_${Date.now()}_${Math.floor(Math.random()*1000)}`,
-            date: date,
-            itemName: cartItem.itemName,
-            price: Number(cartItem.price),
-            qty: Number(cartItem.qty)
-          };
+        const saleDate = document.getElementById('posSaleDate').value || new Date().toISOString().split('T')[0];
+        
+        for (const item of state.cart) {
+          const newSale = { date: saleDate, itemName: item.itemName, price: item.price, qty: item.qty };
           state.sales.push(newSale);
-          if (db) await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'sales', newSale.id), newSale);
+          if (db) await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'sales'), newSale);
         }
 
-        // Render invoice content
+        const invNo = `INV-${Date.now().toString().slice(-6)}`;
         document.getElementById('invStoreName').innerText = state.store.name;
-        document.getElementById('invStoreAddr').innerText = `${state.store.address} - ${state.store.phone}`;
-        document.getElementById('invNo').innerText = invoiceNo;
-        document.getElementById('invDate').innerText = date;
+        document.getElementById('invStoreAddr').innerText = state.store.address;
+        document.getElementById('invNo').innerText = invNo;
+        document.getElementById('invDate').innerText = saleDate;
 
         const invList = document.getElementById('invItemsList');
         invList.innerHTML = '';
         state.cart.forEach(c => {
-          const itemDiv = document.createElement('div');
-          itemDiv.className = 'flex justify-between items-center';
-          itemDiv.innerHTML = `
-            <span>${c.itemName} x${c.qty}</span>
-            <span>Rp ${(c.price * c.qty).toLocaleString('id-ID')}</span>
+          invList.innerHTML += `
+            <div class="flex justify-between">
+              <span>${c.itemName} x${c.qty}</span>
+              <span>Rp ${(c.price * c.qty).toLocaleString('id-ID')}</span>
+            </div>
           `;
-          invList.appendChild(itemDiv);
         });
 
         document.getElementById('invTotalAmount').innerText = `Rp ${grandTotal.toLocaleString('id-ID')}`;
@@ -1780,155 +1544,173 @@
         this.openModal('modalInvoicePreview');
         this.clearCart();
         this.renderAllViews();
-        window.customAlert('Transaksi berhasil diselesaikan!');
+        window.customAlert('Transaksi berhasil disimpan!');
       },
-
       printInvoiceNow() {
+        const printContent = document.getElementById('printable-invoice').innerHTML;
+        const originalContent = document.body.innerHTML;
+        document.body.innerHTML = `<div style="padding:20px;max-width:300px;margin:auto;">${printContent}</div>`;
         window.print();
+        document.body.innerHTML = originalContent;
+        window.location.reload(); 
       },
 
       renderStockCardLedger() {
         const select = document.getElementById('stockCardItemSelect');
         if (!select) return;
 
-        if (select.children.length === 0 && state.items.length > 0) {
-          select.innerHTML = '';
-          state.items.forEach(i => {
-            const opt = document.createElement('option');
-            opt.value = i.name; opt.innerText = i.name;
-            select.appendChild(opt);
+        if (select.options.length <= 1) {
+          select.innerHTML = '<option value="">-- Pilih Barang Ledger --</option>';
+          state.items.forEach(item => {
+            select.innerHTML += `<option value="${item.name}">${item.name}</option>`;
           });
         }
 
-        const selectedName = select.value || (state.items[0] ? state.items[0].name : '');
-        if (!selectedName) return;
+        const itemName = select.value;
+        const tbody = document.getElementById('stockCardLedgerBody');
+        if (!itemName) { tbody.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-slate-500 italic">Pilih barang untuk melihat kartu stok</td></tr>`; return; }
 
-        const itemMaster = state.items.find(i => i.name === selectedName);
-        document.getElementById('stockCardTitle').innerText = selectedName;
-        document.getElementById('stockCardSubtitle').innerText = `Kategori: ${itemMaster?.category || 'General'} | SKU: ${itemMaster?.sku || '-'}`;
+        const item = state.items.find(i => i.name === itemName);
+        document.getElementById('stockCardTitle').innerText = itemName;
+        document.getElementById('stockCardSubtitle').innerText = `SKU: ${item?.sku || '-'} | Kategori: ${item?.category || '-'}`;
 
-        const initial = itemMaster ? Number(itemMaster.initialStock || 0) : 0;
-        const ledger = [];
-
-        if (initial > 0) {
-          ledger.push({ date: 'Awal', desc: 'Stok Awal Master', inQty: initial, outQty: 0 });
+        let ledger = [];
+        if (item?.initialStock > 0) {
+          ledger.push({ date: '2020-01-01', type: 'INIT', desc: 'Stok Awal (Opname)', in: Number(item.initialStock), out: 0 });
         }
 
-        state.purchases.filter(p => p.itemName.toLowerCase() === selectedName.toLowerCase()).forEach(p => {
-          ledger.push({ date: p.date, desc: `Pembelian (${p.supplier || 'Supplier'})`, inQty: Number(p.qty), outQty: 0 });
+        state.purchases.filter(p => p.itemName === itemName).forEach(p => {
+          ledger.push({ date: p.date, type: 'IN', desc: `Pembelian (Supplier: ${p.supplier || '-'})`, in: Number(p.qty), out: 0 });
         });
 
-        state.sales.filter(s => s.itemName.toLowerCase() === selectedName.toLowerCase()).forEach(s => {
-          ledger.push({ date: s.date, desc: `Penjualan POS Kasir`, inQty: 0, outQty: Number(s.qty) });
+        state.sales.filter(s => s.itemName === itemName).forEach(s => {
+          ledger.push({ date: s.date, type: 'OUT', desc: 'Penjualan (Kasir POS)', in: 0, out: Number(s.qty) });
         });
 
-        ledger.sort((a, b) => (a.date > b.date ? 1 : -1));
+        ledger.sort((a, b) => new Date(a.date) - new Date(b.date));
 
         let balance = 0;
-        let totalIn = 0;
-        let totalOut = 0;
-
-        const tbody = document.getElementById('stockCardLedgerBody');
+        let totIn = 0; let totOut = 0;
         tbody.innerHTML = '';
 
         ledger.forEach(l => {
-          balance += (l.inQty - l.outQty);
-          totalIn += l.inQty;
-          totalOut += l.outQty;
-
+          balance += l.in; balance -= l.out;
+          totIn += l.in; totOut += l.out;
           const tr = document.createElement('tr');
-          tr.className = "hover:bg-slate-800/40";
+          tr.className = "hover:bg-slate-800/40 transition";
           tr.innerHTML = `
-            <td class="px-4 py-2.5 font-mono text-slate-400">${l.date}</td>
-            <td class="px-4 py-2.5 font-medium text-slate-200">${l.desc}</td>
-            <td class="px-4 py-2.5 text-center font-bold text-emerald-400">${l.inQty > 0 ? '+' + l.inQty : '-'}</td>
-            <td class="px-4 py-2.5 text-center font-bold text-rose-400">${l.outQty > 0 ? '-' + l.outQty : '-'}</td>
-            <td class="px-4 py-2.5 text-center font-mono font-bold text-brand-400">${balance}</td>
+            <td class="px-4 py-2.5 font-mono text-slate-400">${l.type === 'INIT' ? '-' : l.date}</td>
+            <td class="px-4 py-2.5 text-slate-200">${l.desc}</td>
+            <td class="px-4 py-2.5 text-center text-emerald-400 font-bold">${l.in > 0 ? `+${l.in}` : '-'}</td>
+            <td class="px-4 py-2.5 text-center text-rose-400 font-bold">${l.out > 0 ? `-${l.out}` : '-'}</td>
+            <td class="px-4 py-2.5 text-center text-brand-400 font-bold bg-brand-500/5">${balance}</td>
           `;
           tbody.appendChild(tr);
         });
 
-        document.getElementById('stockCardTotalIn').innerText = totalIn;
-        document.getElementById('stockCardTotalOut').innerText = totalOut;
+        document.getElementById('stockCardTotalIn').innerText = totIn;
+        document.getElementById('stockCardTotalOut').innerText = totOut;
         document.getElementById('stockCardCurrentBalance').innerText = balance;
       },
 
       renderMonthlyReport() {
         const month = document.getElementById('reportMonth')?.value || '10';
         const year = document.getElementById('reportYear')?.value || '2026';
+        
+        const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+        document.getElementById('reportPeriodText').innerText = `Periode: ${monthNames[parseInt(month)-1]} ${year}`;
+        document.getElementById('reportDateStamp').innerText = `Dicetak: ${new Date().toLocaleString('id-ID')}`;
 
-        const monthNames = { "10": "Oktober", "11": "November", "12": "Desember" };
-        document.getElementById('reportPeriodText').innerText = `Periode Laporan: ${monthNames[month] || month} ${year}`;
-        document.getElementById('reportDateStamp').innerText = `Tanggal Cetak: ${new Date().toLocaleDateString('id-ID')}`;
+        let totalPur = 0;
+        let totalSal = 0;
+        let totalProf = 0;
+        
+        const reportData = {};
 
-        let totalPurCost = 0;
-        let totalSalesRev = 0;
-        let totalEstProfit = 0;
+        state.items.forEach(i => {
+          reportData[i.name] = { name: i.name, inQty: 0, inCost: 0, outQty: 0, outRev: 0, balance: this.calculateRealtimeStock(i.name) };
+        });
+
+        state.purchases.forEach(p => {
+          if (p.date.startsWith(`${year}-${month.padStart(2, '0')}`)) {
+            const cost = p.price * p.qty;
+            totalPur += cost;
+            if (reportData[p.itemName]) {
+              reportData[p.itemName].inQty += p.qty;
+              reportData[p.itemName].inCost += cost;
+            }
+          }
+        });
+
+        state.sales.forEach(s => {
+          if (s.date.startsWith(`${year}-${month.padStart(2, '0')}`)) {
+            const rev = s.price * s.qty;
+            totalSal += rev;
+            if (reportData[s.itemName]) {
+              reportData[s.itemName].outQty += s.qty;
+              reportData[s.itemName].outRev += rev;
+              
+              const itemMaster = state.items.find(i => i.name === s.itemName);
+              const buyPrice = itemMaster ? (itemMaster.buyPrice || 0) : 0;
+              totalProf += (s.price - buyPrice) * s.qty;
+            }
+          }
+        });
+
+        document.getElementById('reportSumPurchases').innerText = `Rp ${totalPur.toLocaleString('id-ID')}`;
+        document.getElementById('reportSumSales').innerText = `Rp ${totalSal.toLocaleString('id-ID')}`;
+        document.getElementById('reportSumProfit').innerText = `Rp ${totalProf.toLocaleString('id-ID')}`;
 
         const tbody = document.getElementById('reportMonthlyTableBody');
         if (!tbody) return;
         tbody.innerHTML = '';
 
-        state.items.forEach((item, idx) => {
-          const itemPurchases = state.purchases.filter(p => p.itemName.toLowerCase() === item.name.toLowerCase() && p.date.startsWith(`${year}-${month}`));
-          const itemSales = state.sales.filter(s => s.itemName.toLowerCase() === item.name.toLowerCase() && s.date.startsWith(`${year}-${month}`));
-
-          const inQty = itemPurchases.reduce((s, p) => s + Number(p.qty), 0);
-          const purCost = itemPurchases.reduce((s, p) => s + (Number(p.price) * Number(p.qty)), 0);
-
-          const outQty = itemSales.reduce((s, x) => s + Number(x.qty), 0);
-          const salesRev = itemSales.reduce((s, x) => s + (Number(x.price) * Number(x.qty)), 0);
-
-          const currentStock = this.calculateRealtimeStock(item.name);
-
-          totalPurCost += purCost;
-          totalSalesRev += salesRev;
-          totalEstProfit += (salesRev - (outQty * (item.buyPrice || 0)));
-
-          const tr = document.createElement('tr');
-          tr.className = "hover:bg-slate-800/40 print:border-b print:border-slate-300";
-          tr.innerHTML = `
-            <td class="px-3 py-2.5 font-mono text-slate-400">${idx + 1}</td>
-            <td class="px-3 py-2.5 font-semibold text-slate-200 print:text-black">${item.name}</td>
-            <td class="px-3 py-2.5 text-center font-bold text-emerald-400 print:text-black">${inQty}</td>
-            <td class="px-3 py-2.5 text-right font-mono text-slate-200 print:text-black">Rp ${purCost.toLocaleString('id-ID')}</td>
-            <td class="px-3 py-2.5 text-center font-bold text-brand-400 print:text-black">${outQty}</td>
-            <td class="px-3 py-2.5 text-right font-mono text-emerald-400 print:text-black">Rp ${salesRev.toLocaleString('id-ID')}</td>
-            <td class="px-3 py-2.5 text-center font-mono font-bold text-slate-200 print:text-black">${currentStock}</td>
-          `;
-          tbody.appendChild(tr);
-        });
-
-        document.getElementById('reportSumPurchases').innerText = `Rp ${totalPurCost.toLocaleString('id-ID')}`;
-        document.getElementById('reportSumSales').innerText = `Rp ${totalSalesRev.toLocaleString('id-ID')}`;
-        document.getElementById('reportSumProfit').innerText = `Rp ${totalEstProfit.toLocaleString('id-ID')}`;
+        let no = 1;
+        for (const key in reportData) {
+          const r = reportData[key];
+          if (r.inQty > 0 || r.outQty > 0 || r.balance > 0) {
+            tbody.innerHTML += `
+              <tr class="hover:bg-slate-800/20 print:hover:bg-transparent">
+                <td class="px-3 py-2.5 text-slate-500 print:text-black">${no++}</td>
+                <td class="px-3 py-2.5 font-semibold text-slate-200 print:text-black">${r.name}</td>
+                <td class="px-3 py-2.5 text-center text-emerald-400 print:text-black">${r.inQty}</td>
+                <td class="px-3 py-2.5 text-right font-mono text-slate-300 print:text-black">Rp ${r.inCost.toLocaleString('id-ID')}</td>
+                <td class="px-3 py-2.5 text-center text-rose-400 print:text-black">${r.outQty}</td>
+                <td class="px-3 py-2.5 text-right font-mono text-slate-300 print:text-black">Rp ${r.outRev.toLocaleString('id-ID')}</td>
+                <td class="px-3 py-2.5 text-center font-bold text-brand-400 print:text-black">${r.balance}</td>
+              </tr>
+            `;
+          }
+        }
       },
-
-      printMonthlyReport() {
-        window.print();
-      },
+      printMonthlyReport() { window.print(); },
 
       exportAllDataJSON() {
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state, null, 2));
-        const downloadAnchor = document.createElement('a');
-        downloadAnchor.setAttribute("href", dataStr);
-        downloadAnchor.setAttribute("download", `CDAN_SHOP_BACKUP_${new Date().toISOString().split('T')[0]}.json`);
-        document.body.appendChild(downloadAnchor);
-        downloadAnchor.click();
-        downloadAnchor.remove();
-        window.customAlert('Backup data JSON berhasil diunduh!');
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
+        const downloadAnchorNode = document.createElement('a');
+        downloadAnchorNode.setAttribute("href",     dataStr);
+        downloadAnchorNode.setAttribute("download", `CDanShop_Backup_${new Date().toISOString().split('T')[0]}.json`);
+        document.body.appendChild(downloadAnchorNode); 
+        downloadAnchorNode.click();
+        downloadAnchorNode.remove();
+        window.customAlert('Backup Database Berhasil Diunduh!');
+      },
+      refreshDashboardData() {
+        this.renderAllViews();
+        window.customAlert('Data dashboard dimuat ulang.');
       }
     };
 
-    window.onload = function() {
-      setInterval(() => {
-        const clockEl = document.getElementById('currentClock');
-        if (clockEl) clockEl.innerText = new Date().toLocaleTimeString('id-ID');
-      }, 1000);
+    // Clock
+    setInterval(() => {
+      const now = new Date();
+      document.getElementById('currentClock').innerText = now.toLocaleTimeString('id-ID', { hour12: false });
+    }, 1000);
 
-      initFirebase();
+    window.onload = async () => {
       purchaseGrid.init();
       app.renderAllViews();
+      await initFirebase();
     };
   </script>
 </body>
