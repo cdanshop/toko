@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>C'DAN SHOP - Management System</title>
+  <title>C'DAN SHOP - PURBALINGGA</title>
+  
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -40,7 +41,10 @@
     }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-brand-500 selection:text-white">
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-brand-500 selection:text-white relative">
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="fixed top-4 right-4 z-[9999] flex flex-col gap-2 pointer-events-none"></div>
 
   <!-- App Wrapper -->
   <div class="flex h-screen overflow-hidden">
@@ -128,7 +132,7 @@
       </header>
 
       <!-- CONTENT AREA -->
-      <main class="flex-1 overflow-y-auto p-6 bg-slate-950">
+      <main class="flex-1 overflow-y-auto p-6 bg-slate-950 relative">
 
         <!-- TAB 1: DASHBOARD -->
         <div id="tab-dashboard" class="tab-content space-y-6">
@@ -313,7 +317,8 @@
                 <option value="Sembako">Sembako</option>
                 <option value="Minuman">Minuman</option>
                 <option value="Makanan">Makanan</option>
-                <option value="Lainnya">Lainnya</option>
+                <option value="Pakaian">Pakaian</option>
+                <option value="Tas">Tas</option>
               </select>
             </div>
           </div>
@@ -529,7 +534,7 @@
           </div>
 
           <!-- Printable Report Sheet -->
-          <div id="printable-area" class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-6 print:bg-white print:text-black print:border-none">
+          <div id="printable-area" class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-6 print:bg-white print:text-black print:border-none print:shadow-none">
             <div class="flex justify-between items-start border-b border-slate-800 pb-4 print:border-slate-300">
               <div>
                 <h3 class="text-lg font-bold text-slate-100 print:text-black">C'DAN SHOP MANAGEMENT SYSTEM</h3>
@@ -582,7 +587,26 @@
     </div>
   </div>
 
+  <!-- WATERMARK (Added as requested, without breaking structure) -->
+  <div class="fixed bottom-3 right-4 pointer-events-none z-50 print:hidden opacity-40 hover:opacity-100 transition-opacity">
+    <span class="text-[10px] text-slate-400 font-medium tracking-widest font-mono">© 2026 C'DAN SHOP</span>
+  </div>
+
   <!-- MODALS AREA -->
+
+  <!-- Custom Confirm Modal -->
+  <div id="modalCustomConfirm" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 w-full max-w-sm rounded-2xl p-6 text-center space-y-4">
+      <div class="w-12 h-12 rounded-full bg-rose-500/20 text-rose-500 mx-auto flex items-center justify-center text-xl">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+      </div>
+      <h3 id="customConfirmText" class="text-sm font-bold text-slate-100">Apakah Anda yakin?</h3>
+      <div class="flex justify-center gap-2 pt-2">
+        <button onclick="document.getElementById('modalCustomConfirm').classList.add('hidden')" class="px-4 py-2 bg-slate-800 text-slate-300 hover:text-white rounded-xl text-xs font-medium transition">Batal</button>
+        <button onclick="if(window.confirmCallback) window.confirmCallback()" class="px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white rounded-xl text-xs font-bold shadow-md shadow-rose-600/20 transition">Ya, Lanjutkan</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Store Profile Modal -->
   <div id="modalStoreProfile" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
@@ -627,9 +651,10 @@
           <label class="block text-slate-400 mb-1">Kategori</label>
           <select id="modalItemCategory" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-slate-200">
             <option value="Sembako">Sembako</option>
-            <option value="Minuman">Minuman</option>
-            <option value="Makanan">Makanan</option>
-            <option value="Lainnya">Lainnya</option>
+                <option value="Minuman">Minuman</option>
+                <option value="Makanan">Makanan</option>
+                <option value="Pakaian">Pakaian</option>
+                <option value="Tas">Tas</option>
           </select>
         </div>
         <div>
@@ -741,15 +766,44 @@
     import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
     import { getFirestore, collection, onSnapshot, doc, setDoc, addDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
+    // Custom Toast Notification System (Replacing native alert)
+    window.customAlert = function(msg, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      const bg = type === 'error' ? 'bg-rose-600' : 'bg-emerald-600';
+      const icon = type === 'error' ? 'fa-circle-exclamation' : 'fa-circle-check';
+      
+      toast.className = `${bg} text-white px-4 py-3 rounded-xl shadow-lg shadow-black/50 text-xs font-semibold transform transition-all duration-300 translate-x-[120%] flex items-center gap-2`;
+      toast.innerHTML = `<i class="fa-solid ${icon}"></i> <span>${msg}</span>`;
+      container.appendChild(toast);
+      
+      setTimeout(() => toast.classList.remove('translate-x-[120%]'), 10);
+      setTimeout(() => {
+        toast.classList.add('translate-x-[120%]');
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    };
+
+    // Custom Confirm System (Replacing native confirm)
+    window.customConfirm = function(msg, callback) {
+      const modal = document.getElementById('modalCustomConfirm');
+      document.getElementById('customConfirmText').innerText = msg;
+      modal.classList.remove('hidden');
+      window.confirmCallback = () => {
+        modal.classList.add('hidden');
+        callback();
+      };
+    };
+
     const appId = typeof __app_id !== 'undefined' ? __app_id : 'toko-maju-jaya-app';
     const firebaseConfig = {
-  apiKey: "AIzaSyD_g1wcaqaT7Wv9JK8MSx53POQ6pn--_EY",
-  authDomain: "cdanshop.firebaseapp.com",
-  projectId: "cdanshop",
-  storageBucket: "cdanshop.firebasestorage.app",
-  messagingSenderId: "990568874182",
-  appId: "1:990568874182:web:38efd597e5a34f12f517c7"
-};
+      apiKey: "AIzaSyD_g1wcaqaT7Wv9JK8MSx53POQ6pn--_EY",
+      authDomain: "cdanshop.firebaseapp.com",
+      projectId: "cdanshop",
+      storageBucket: "cdanshop.firebasestorage.app",
+      messagingSenderId: "990568874182",
+      appId: "1:990568874182:web:38efd597e5a34f12f517c7"
+    };
     const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
     let db = null;
@@ -948,13 +1002,13 @@
         }
 
         if (validCount > 0) {
-          alert(`Berhasil menyimpan ${validCount} baris transaksi pembelian ke database!`);
+          window.customAlert(`Berhasil menyimpan ${validCount} baris transaksi pembelian ke database!`);
           this.rows = [{ date: new Date().toISOString().split('T')[0], itemName: '', price: 0, qty: 1, supplier: '' }];
           this.render();
           app.renderAllViews();
           app.navigate('database-pembelian');
         } else {
-          alert('Mohon isi minimal satu baris data barang, harga, dan jumlah dengan benar.');
+          window.customAlert('Mohon isi minimal satu baris data barang, harga, dan jumlah dengan benar.', 'error');
         }
       }
     };
@@ -971,7 +1025,7 @@
         state.store.address = document.getElementById('settingStoreAddress').value;
         state.store.phone = document.getElementById('settingStorePhone').value;
         this.closeModal('modalStoreProfile');
-        alert('Profil toko berhasil diperbarui!');
+        window.customAlert('Profil toko berhasil diperbarui!');
         this.renderAllViews();
       },
       openModal(modalId) {
@@ -1037,6 +1091,7 @@
           lowBadge.classList.add('hidden');
         }
       },
+      
       renderDashboard() {
         const totalPurchasesCost = state.purchases.reduce((sum, p) => sum + (Number(p.price) * Number(p.qty)), 0);
         const totalSalesRevenue = state.sales.reduce((sum, s) => sum + (Number(s.price) * Number(s.qty)), 0);
@@ -1117,6 +1172,7 @@
           }
         });
       },
+
       renderMasterItemsTable() {
         const query = document.getElementById('itemSearchInput')?.value.toLowerCase() || '';
         const cat = document.getElementById('itemFilterCategory')?.value || 'ALL';
@@ -1191,7 +1247,7 @@
         const minStock = Number(document.getElementById('modalItemMinStock').value);
 
         if (!name) {
-          alert('Nama barang wajib diisi.');
+          window.customAlert('Nama barang wajib diisi.', 'error');
           return;
         }
 
@@ -1214,8 +1270,9 @@
 
         this.closeModal('modalMasterItem');
         this.renderAllViews();
-        alert('Data barang master berhasil disimpan!');
+        window.customAlert('Data barang master berhasil disimpan!');
       },
+
       renderPurchasesTable() {
         const query = document.getElementById('purchaseSearchInput')?.value.toLowerCase() || '';
         const tbody = document.getElementById('purchasesTableBody');
@@ -1272,20 +1329,21 @@
         }
         this.closeModal('modalEditPurchase');
         this.renderAllViews();
-        alert('Perubahan pembelian berhasil disimpan!');
+        window.customAlert('Perubahan pembelian berhasil disimpan!');
       },
       async deletePurchaseRecord() {
         const id = document.getElementById('editPurchaseId').value;
-        if (confirm('Yakin ingin menghapus record pembelian ini?')) {
+        window.customConfirm('Yakin ingin menghapus record pembelian ini?', async () => {
           state.purchases = state.purchases.filter(p => p.id !== id);
           if (db && id) {
             await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'purchases', id));
           }
-          this.closeModal('modalEditPurchase');
-          this.renderAllViews();
-          alert('Record pembelian berhasil dihapus.');
-        }
+          app.closeModal('modalEditPurchase');
+          app.renderAllViews();
+          window.customAlert('Record pembelian berhasil dihapus.');
+        });
       },
+
       renderPriceTrends() {
         const sortType = document.getElementById('priceTrendSort')?.value || 'DESC_BUY';
         let sorted = [...state.items];
@@ -1353,6 +1411,7 @@
           listContainer.appendChild(div);
         });
       },
+
       renderPosScreen() {
         const itemSelect = document.getElementById('posItemSelect');
         if (!itemSelect) return;
@@ -1411,13 +1470,13 @@
         const price = Number(document.getElementById('posItemPrice').value);
 
         if (!name || qty <= 0 || price <= 0) {
-          alert('Mohon pilih barang dan atur jumlah/harga dengan benar.');
+          window.customAlert('Mohon pilih barang dan atur jumlah/harga dengan benar.', 'error');
           return;
         }
 
         const currentStock = this.calculateRealtimeStock(name);
         if (qty > currentStock) {
-          alert(`Stok tidak mencukupi! Stok saat ini hanya ${currentStock}.`);
+          window.customAlert(`Stok tidak mencukupi! Stok saat ini hanya ${currentStock}.`, 'error');
           return;
         }
 
@@ -1463,6 +1522,7 @@
             changeOutput.className = "text-base font-bold text-brand-400";
         }
       },
+
       calculateChange() {
         const totalStr = document.getElementById('cartGrandTotal').innerText.replace(/[^0-9-]/g, '');
         const totalAmount = Number(totalStr) || 0;
@@ -1492,7 +1552,7 @@
       },
       async checkoutAndShowInvoice() {
         if (state.cart.length === 0) {
-          alert('Keranjang belanja kosong.');
+          window.customAlert('Keranjang belanja kosong.', 'error');
           return;
         }
 
@@ -1664,7 +1724,7 @@
       },
       refreshDashboardData() {
         this.renderAllViews();
-        alert('Data dashboard berhasil direfresh!');
+        window.customAlert('Data dashboard berhasil direfresh!');
       },
       exportAllDataJSON() {
         const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state, null, 2));
